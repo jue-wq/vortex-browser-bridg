@@ -27,6 +27,7 @@ export class AdblockController {
   async start(): Promise<void> {
     if (this.started) return;
     this.started = true;
+    if (this.isFirefoxAndroid()) return; // Android filtering is delegated to the official uBlock Origin add-on.
     await this.refresh(false);
     const values = await browser.storage.local.get("vortexFullFilterListsEnabled");
     if (values.vortexFullFilterListsEnabled === true && this.isFirefox()) {
@@ -45,6 +46,7 @@ export class AdblockController {
   }
 
   async refresh(rebuild = true): Promise<void> {
+    if (this.isFirefoxAndroid()) return;
     const values = await browser.storage.local.get([...STORAGE_KEYS]);
     this.enabled = values.vortexAdblockEnabled !== false;
     const custom = typeof values.vortexCustomFilterRules === "string"
@@ -59,6 +61,7 @@ export class AdblockController {
   }
 
   async enableFullLists(): Promise<void> {
+    if (this.isFirefoxAndroid()) throw new Error("On Android, install the original uBlock Origin add-on in Firefox. Vortex Browser Bridge does not run a second blocker.");
     if (!this.isFirefox()) {
       throw new Error("Full filter-list mode requires Firefox desktop or Firefox for Android. Chromium MV3 uses DNR-compatible rules.");
     }
@@ -120,4 +123,5 @@ export class AdblockController {
   }
 
   private isFirefox(): boolean { return /firefox/i.test(navigator.userAgent); }
+  private isFirefoxAndroid(): boolean { return this.isFirefox() && /android/i.test(navigator.userAgent); }
 }
