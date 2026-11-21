@@ -3,6 +3,7 @@
 - Current phase: 1 of 5 (IN_PROGRESS)
 - Platform scope: Chromium desktop MV3, Firefox desktop MV3 and Firefox Android MV2. Google Chrome Android is not an extension target.
 - Android ad-blocking decision: use original Raymond Hill uBlock Origin from the official Mozilla Add-ons listing in Firefox for Android. Browser Bridge Android handles download handoff only; its Ghostery/local filtering engine is not the Android blocker and must not duplicate uBO. See VortexDM docs/ANDROID_UBO_INTEGRATION.md.
+- Android code change: AdblockController exits before attaching any local/Ghostery blocker on Firefox for Android; options show the official Mozilla uBO install link instead of Bridge filter settings. Commit f27ef83 is queued for CI.
 - Adblocking: built-in DNR-compatible rules for Chromium and optional MPL-2.0 Ghostery WebExtension engine (EasyList/EasyPrivacy-compatible) on Firefox. Full filter subscriptions require explicit user action and compiled rules are cached in IndexedDB.
 - Transport: Native Messaging on desktop; Android localhost transport settings only. Android app-side HTTP server is not implemented yet.
 - CI evidence: run 44953304877 completed successfully: npm install, WXT prepare/typecheck, 12 Vitest cases, Chrome MV3 build, Firefox desktop MV3 build, Firefox Android MV2 build; protocol sync comparison passed.

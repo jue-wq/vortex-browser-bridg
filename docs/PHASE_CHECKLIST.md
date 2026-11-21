@@ -21,6 +21,7 @@ A checked item means implementation exists; phase completion requires all accept
 
 ## Phase 3 — Media, extraction and privacy filtering
 - [x] Android responsibility clarified: original uBlock Origin in Firefox for Android; Bridge Android focuses on download handoff
+- [x] Disable Bridge adblock engine and hide its custom filter controls on Firefox for Android
 - [x] Direct media URL detector/deduplicator
 - [x] Platform/playlist detector
 - [x] Local filter parser with network exceptions and cosmetic rules
