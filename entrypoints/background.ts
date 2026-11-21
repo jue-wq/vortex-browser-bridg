@@ -95,7 +95,7 @@ export default defineBackground({
       if(value.type==="VORTEX_ADD_DOWNLOAD"&&value.url) void sendDownload(value.url,sender.tab?.url,typeof value.queueId==="string"?value.queueId:undefined);
       if(value.type==="VORTEX_EXTRACT_PAGE"&&value.url){
         const rawCookies=Array.isArray(value.cookies)?value.cookies as RawCookie[]:[];
-        void sendExtract(value.url,sender.tab?.title??"",rawCookies);
+        void sendExtract(value.url,sender.tab?.title??"",rawCookies,typeof value.queueId==="string"?value.queueId:undefined);
       }
     });
 
@@ -126,13 +126,13 @@ export default defineBackground({
       if(payload.success)await connection.request("add_download",payload.data).catch(()=>undefined);
     }
 
-    async function sendExtract(url:string,title:string,rawCookies:RawCookie[]):Promise<void>{
+    async function sendExtract(url:string,title:string,rawCookies:RawCookie[],queueId?:string):Promise<void>{
       if(!isHttpUrl(url))return;
       const cookies=rawCookies.flatMap(cookie=>{
         if(typeof cookie.name!=="string"||typeof cookie.value!=="string"||typeof cookie.domain!=="string")return [];
         return [{name:cookie.name,value:cookie.value,domain:cookie.domain,path:typeof cookie.path==="string"?cookie.path:"/",secure:cookie.secure===true,http_only:cookie.httpOnly===true,...(typeof cookie.expirationDate==="number"?{expires:cookie.expirationDate}:{})}];
       });
-      const parsed=extractMediaPayloadSchema.safeParse({webpage_url:url,page_title:title,user_agent:navigator.userAgent,cookies,playlist_mode:detectYtDlpPage(url).playlist?"ask":"single"});
+      const parsed=extractMediaPayloadSchema.safeParse({webpage_url:url,page_title:title,user_agent:navigator.userAgent,cookies,playlist_mode:detectYtDlpPage(url).playlist?"playlist":"single",...(queueId?{queue_id:queueId}:{})});
       if(parsed.success)await connection.request("extract_media",parsed.data).catch(()=>undefined);
     }
 
