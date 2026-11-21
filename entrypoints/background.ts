@@ -69,7 +69,7 @@ export default defineBackground({
         const urls=value.urls.filter((url):url is string=>typeof url==="string"&&isHttpUrl(url));
         const sourcePage=isHttpUrl(value.sourcePage??"")?value.sourcePage:sender.tab?.url;
         const candidate=addBatchPayloadSchema.safeParse({items:urls.map(url=>({url})),source_page:sourcePage});
-        if(candidate.success) void connection.request("add_batch",candidate.data).catch(()=>undefined);
+        if(candidate.success) void connection.addBatch(candidate.data).catch(()=>undefined);
       }
       if(value.type==="VORTEX_ADD_DOWNLOAD"&&value.url) void sendDownload(value.url,sender.tab?.url);
       if(value.type==="VORTEX_EXTRACT_PAGE"&&value.url){

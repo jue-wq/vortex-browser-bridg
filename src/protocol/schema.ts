@@ -48,6 +48,15 @@ export const addBatchPayloadSchema = z.object({
   queue_id: z.string().optional()
 }).strict();
 
+export const addBatchChunkPayloadSchema = z.object({
+  chunk_id: z.string().min(1).max(128),
+  chunk_index: z.number().int().min(0).max(127),
+  chunk_total: z.number().int().min(1).max(128),
+  chunk_data: z.string().min(4)
+}).strict().superRefine((value, ctx) => {
+  if (value.chunk_index >= value.chunk_total) ctx.addIssue({code:z.ZodIssueCode.custom,path:["chunk_index"],message:"chunk_index must be below chunk_total"});
+});
+
 export const taskControlPayloadSchema = z.object({
   action: z.enum(["pause", "resume", "cancel", "focus_app"]),
   task_id: z.string().optional()
@@ -56,7 +65,8 @@ export const taskControlPayloadSchema = z.object({
 export type IpcEnvelope = z.infer<typeof envelopeSchema>;
 export type CookiePayload = z.infer<typeof cookieSchema>;
 export type AddDownloadPayload = z.infer<typeof addDownloadPayloadSchema>;
-export type OutgoingMessageType = "handshake" | "add_download" | "extract_media" | "add_batch" | "task_control";
+export type AddBatchPayload = z.infer<typeof addBatchPayloadSchema>;
+export type OutgoingMessageType = "handshake" | "add_download" | "extract_media" | "add_batch" | "add_batch_chunk" | "task_control";
 
 export function validateEnvelope(input: unknown): IpcEnvelope {
   return envelopeSchema.parse(input);
