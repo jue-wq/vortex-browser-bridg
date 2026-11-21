@@ -9,8 +9,10 @@ WXT + strict TypeScript + Preact extension for desktop Chromium/Firefox and Fire
 - Other Android Chromium forks: best-effort only after per-browser compatibility tests.
 - **Google Chrome for Android is not supported** because it does not provide an extension host.
 
-## uBlock-Origin-style protection
-Includes a local-first filter engine for common ABP/uBO-style network rules, exceptions, per-domain/resource-type conditions, cosmetic hiding rules, custom user rules and per-site allow rules. It is a foundation with an explicit compatibility subset, not a claim of full uBlock Origin feature parity or use of Raymond Hill's code/lists.
+## Android ad blocking: original uBlock Origin
+On Android, use the original uBlock Origin by Raymond Hill in Firefox for Android from the official [Mozilla Add-ons listing](https://addons.mozilla.org/android/addon/ublock-origin/). Browser Bridge is the download handoff extension; it is not the Android ad blocker and does not replace uBO. Do not install a second content blocker in the same Firefox profile.
+
+The local ABP/uBO-compatible subset and Ghostery engine are maintained for non-Android Bridge targets only. They are not represented as full uBO or used as an Android substitute.
 
 ## Development
 ```bash

@@ -20,6 +20,7 @@ A checked item means implementation exists; phase completion requires all accept
 - [ ] Android Firefox download API capability matrix and handoff tests
 
 ## Phase 3 — Media, extraction and privacy filtering
+- [x] Android responsibility clarified: original uBlock Origin in Firefox for Android; Bridge Android focuses on download handoff
 - [x] Direct media URL detector/deduplicator
 - [x] Platform/playlist detector
 - [x] Local filter parser with network exceptions and cosmetic rules
