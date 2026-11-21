@@ -16,12 +16,17 @@ export class HttpFallbackTransport implements ITransport {
   }
   async send(message: unknown, timeoutMs = 1500): Promise<unknown> {
     if (!this.active) await this.connect();
-    const response = await fetch(`http://127.0.0.1:${this.port}/ipc`, {
-      method: "POST", headers: {"Content-Type": "application/json", "X-Vortex-Api-Key": this.apiKey},
-      body: JSON.stringify(message), signal: AbortSignal.timeout(timeoutMs)
-    });
-    if (!response.ok) throw new Error(`Local fallback returned HTTP ${response.status}`);
-    return response.json() as Promise<unknown>;
+    try {
+      const response = await fetch(`http://127.0.0.1:${this.port}/ipc`, {
+        method: "POST", headers: {"Content-Type": "application/json", "X-Vortex-Api-Key": this.apiKey},
+        body: JSON.stringify(message), signal: AbortSignal.timeout(timeoutMs)
+      });
+      if (!response.ok) throw new Error(`Local fallback returned HTTP ${response.status}`);
+      return await response.json() as unknown;
+    } catch (error) {
+      this.active = false;
+      throw error;
+    }
   }
   disconnect(): void { this.active = false; }
 }
