@@ -6,9 +6,9 @@ export default defineConfig({
   manifest: ({ browser, manifestVersion }) => {
     const firefoxAndroid = browser === "firefox" && manifestVersion === 2;
     const permissions = firefoxAndroid
-      ? ["storage", "tabs", "contextMenus", "webRequest", "webRequestBlocking", "cookies", "<all_urls>"]
+      ? ["storage", "tabs", "contextMenus", "webRequest", "webRequestBlocking", "cookies", "webNavigation", "<all_urls>"]
       : browser === "firefox"
-        ? ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "webRequestBlocking", "cookies"]
+        ? ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "webRequestBlocking", "cookies", "webNavigation"]
         : ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "cookies", "declarativeNetRequest"];
     return {
       name: "Vortex Browser Bridge",

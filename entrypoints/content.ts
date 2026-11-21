@@ -1,8 +1,12 @@
 import { browser } from "wxt/browser";
+import { injectCosmetics } from "@ghostery/adblocker-webextension-cosmetics";
 import { DEFAULT_FILTER_RULES, FilterEngine } from "../src/adblock/FilterEngine";
 
 export default defineContentScript({
-  matches:["http://*/*","https://*/*"],runAt:"document_start",
+  matches:["http://*/*","https://*/*"],
+  allFrames:true,
+  matchAboutBlank:true,
+  runAt:"document_start",
   main() {
     void applyCosmeticFilters();
     const host=document.createElement("div");
@@ -14,7 +18,7 @@ export default defineContentScript({
     button.className="pill";button.textContent="Grab page links";
     button.addEventListener("click",()=>void scanAndSend());
     shadow.append(style,button);
-    const attach=()=>{if(document.documentElement&&!host.isConnected)document.documentElement.append(host);};
+    const attach=()=>{if(document.documentElement&&!host.isConnected&&window.top===window)document.documentElement.append(host);};
     attach();
     if(!document.documentElement)new MutationObserver(attach).observe(document,{childList:true});
     browser.runtime.onMessage.addListener((message:unknown)=>{
@@ -22,7 +26,10 @@ export default defineContentScript({
     });
 
     async function applyCosmeticFilters():Promise<void>{
-      const saved=await browser.storage.local.get("vortexCustomFilterRules");
+      const saved=await browser.storage.local.get(["vortexCustomFilterRules","vortexFullFilterListsEnabled","vortexAdblockEnabled"]);
+      if(saved.vortexAdblockEnabled!==false && saved.vortexFullFilterListsEnabled===true && /firefox/i.test(navigator.userAgent)){
+        injectCosmetics(window,true);
+      }
       const custom=typeof saved.vortexCustomFilterRules==="string"?saved.vortexCustomFilterRules.split(/\r?\n/):[];
       const engine=new FilterEngine([...DEFAULT_FILTER_RULES,...custom]);
       const selectors=engine.getCosmeticSelectors(location.hostname);

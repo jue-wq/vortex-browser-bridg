@@ -53,6 +53,18 @@ export default defineBackground({
     browser.runtime.onMessage.addListener((message:unknown,sender)=>{
       if(!message||typeof message!=="object"||!("type" in message))return;
       const value=message as {type:string;urls?:unknown;sourcePage?:string;url?:string;cookies?:unknown};
+      if(value.type==="VORTEX_ENABLE_FULL_FILTERS"){
+        return adblock.enableFullLists().then(
+          ()=>({success:true}),
+          error=>({success:false,message:error instanceof Error?error.message:"Filter list update failed"})
+        );
+      }
+      if(value.type==="VORTEX_DISABLE_FULL_FILTERS"){
+        return adblock.disableFullLists().then(
+          ()=>({success:true}),
+          error=>({success:false,message:error instanceof Error?error.message:"Could not disable filter lists"})
+        );
+      }
       if(value.type==="VORTEX_ADD_BATCH"&&Array.isArray(value.urls)){
         const urls=value.urls.filter((url):url is string=>typeof url==="string"&&isHttpUrl(url));
         const sourcePage=isHttpUrl(value.sourcePage??"")?value.sourcePage:sender.tab?.url;
