@@ -3,6 +3,8 @@ import { useEffect, useState } from "preact/hooks";
 import { browser } from "wxt/browser";
 import "./style.css";
 
+const t=(key:string,fallback:string)=>browser.i18n.getMessage(key)||fallback;
+
 function Options(){
   const [captureEnabled,setCaptureEnabled]=useState(true);
   const [minSizeMb,setMinSizeMb]=useState("0");
@@ -75,13 +77,13 @@ function Options(){
       <article><h3>Download interception</h3>
         <label><input type="checkbox" checked={captureEnabled} onChange={event=>setCaptureEnabled(event.currentTarget.checked)}/> Capture browser downloads</label>
         <label class="stack">Minimum file size (MiB)<input type="number" min="0" step="1" value={minSizeMb} onInput={event=>setMinSizeMb(event.currentTarget.value)} /></label>
-        <label class="stack">Excluded domains<input value={excludedDomains} onInput={event=>setExcludedDomains(event.currentTarget.value)} placeholder="example.com, private.example" /></label>
+        <label class="stack">${t("excludedDomains","Excluded domains")}<input value={excludedDomains} onInput={event=>setExcludedDomains(event.currentTarget.value)} placeholder="example.com, private.example" /></label>
         <label class="stack">Allowed domains (leave empty for all)<input value={allowedDomains} onInput={event=>setAllowedDomains(event.currentTarget.value)} placeholder="downloads.example.com" /></label>
         <label class="stack">File extensions<input value={includedExtensions} onInput={event=>setIncludedExtensions(event.currentTarget.value)} placeholder="zip, mp4, pdf" /></label>
         <label class="stack">MIME types<input value={includedMimeTypes} onInput={event=>setIncludedMimeTypes(event.currentTarget.value)} placeholder="video/, application/zip" /></label>
         <label><input type="checkbox" checked={incognitoAllowed} onChange={event=>setIncognitoAllowed(event.currentTarget.checked)}/> Allow capture in private windows</label>
         <p>Browser downloads continue unless VortexDM acknowledges within 1.5 seconds.</p></article>
-      {firefoxAndroid ? <article><h3>Ad blocking: original uBlock Origin</h3><p>Android filtering is handled by the original uBlock Origin by Raymond Hill. Vortex Browser Bridge disables its own filter engine on Firefox for Android to avoid duplicate blockers.</p><p><a href="https://addons.mozilla.org/android/addon/ublock-origin/" target="_blank" rel="noreferrer">Install uBlock Origin from Mozilla Add-ons</a></p></article> : <article><h3>Privacy filtering</h3>
+      {firefoxAndroid ? <article><h3>${t("androidUboTitle","Ad blocking: original uBlock Origin")}</h3><p>Android filtering is handled by the original uBlock Origin by Raymond Hill. Vortex Browser Bridge disables its own filter engine on Firefox for Android to avoid duplicate blockers.</p><p><a href="https://addons.mozilla.org/android/addon/ublock-origin/" target="_blank" rel="noreferrer">${t("installUbo","Install uBlock Origin from Mozilla Add-ons")}</a></p></article> : <article><h3>${t("privacyFiltering","Privacy filtering")}</h3>
         <label><input type="checkbox" checked={adblockEnabled} onChange={event=>setAdblockEnabled(event.currentTarget.checked)}/> Block common ads and trackers</label>
         <p>Local rules run in the browser. Chromium MV3 uses DNR-compatible rules; Firefox desktop supports full filter-list processing.</p>
         {firefox ? <div class="filter-status"><strong>{fullListsEnabled?"Full filter lists enabled":"Using built-in local rules"}</strong><button class="secondary" disabled={updatingLists} onClick={()=>void updateFullLists()}>{updatingLists?"Updating…":fullListsEnabled?"Update EasyList/EasyPrivacy lists":"Enable full filter lists"}</button>{fullListsEnabled?<button class="secondary" onClick={()=>void disableFullLists()}>Use built-in rules only</button>:null}<p>First enable/update downloads public filter subscriptions; compiled rules are cached on this device. This feature uses the MPL-2.0 Ghostery WebExtension blocker.</p></div>:<p>Full advanced filter lists are not available in Chromium MV3; use the supported local DNR rules and custom filters.</p>}
@@ -89,8 +91,8 @@ function Options(){
         <p>Custom rules use ABP/uBO-like syntax. Unsupported advanced syntax is ignored by the built-in Chromium-compatible subset.</p>
       </article>}
 
-      <article><h3>Android local bridge</h3><p>Firefox for Android has no Native Messaging API. Configure this only after enabling the VortexDM app's loopback server. It must listen on 127.0.0.1 only.</p><label class="stack">Local port<input value={mobilePort} onInput={event=>setMobilePort(event.currentTarget.value)} /></label><label class="stack">One-time API key<input type="password" value={mobileKey} onInput={event=>setMobileKey(event.currentTarget.value)} placeholder="At least 32 random characters" /></label></article>
-      <button onClick={()=>void save()}>Save settings</button>
+      <article><h3>${t("androidBridge","Android local bridge")}</h3><p>Firefox for Android has no Native Messaging API. Configure this only after enabling the VortexDM app's loopback server. It must listen on 127.0.0.1 only.</p><label class="stack">${t("localPort","Local port")}<input value={mobilePort} onInput={event=>setMobilePort(event.currentTarget.value)} /></label><label class="stack">${t("oneTimeKey","One-time API key")}<input type="password" value={mobileKey} onInput={event=>setMobileKey(event.currentTarget.value)} placeholder="At least 32 random characters" /></label></article>
+      <button onClick={()=>void save()}>${t("saveSettings","Save settings")}</button>
     </section>
   </main>;
 }

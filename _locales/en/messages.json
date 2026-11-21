@@ -1,0 +1,83 @@
+{
+  "appName": {
+    "message": "Vortex Browser Bridge"
+  },
+  "connected": {
+    "message": "Connected"
+  },
+  "configureLoopback": {
+    "message": "Configure VortexDM loopback"
+  },
+  "localFiltersActive": {
+    "message": "Local filters active"
+  },
+  "defaultQueue": {
+    "message": "Default queue"
+  },
+  "currentPage": {
+    "message": "Current page"
+  },
+  "grabLinks": {
+    "message": "Grab page links"
+  },
+  "extractYtdlp": {
+    "message": "Extract with yt-dlp"
+  },
+  "configureYtdlpFirst": {
+    "message": "Configure an active yt-dlp profile in VortexDM first."
+  },
+  "openVortexDM": {
+    "message": "Open VortexDM"
+  },
+  "noPage": {
+    "message": "No page selected"
+  },
+  "captureSettings": {
+    "message": "Download capture"
+  },
+  "enableCapture": {
+    "message": "Enable download capture"
+  },
+  "minFileSize": {
+    "message": "Minimum file size (MB)"
+  },
+  "excludedDomains": {
+    "message": "Excluded domains"
+  },
+  "allowedDomains": {
+    "message": "Allowed domains (override exclusions)"
+  },
+  "includedExtensions": {
+    "message": "Included file extensions"
+  },
+  "includedMimeTypes": {
+    "message": "Included MIME types"
+  },
+  "incognitoAllowed": {
+    "message": "Allow capture in private windows"
+  },
+  "androidUboTitle": {
+    "message": "Ad blocking: original uBlock Origin"
+  },
+  "installUbo": {
+    "message": "Install uBlock Origin from Mozilla Add-ons"
+  },
+  "privacyFiltering": {
+    "message": "Privacy filtering"
+  },
+  "blockCommon": {
+    "message": "Block common ads and trackers"
+  },
+  "androidBridge": {
+    "message": "Android local bridge"
+  },
+  "localPort": {
+    "message": "Local port"
+  },
+  "oneTimeKey": {
+    "message": "One-time API key"
+  },
+  "saveSettings": {
+    "message": "Save settings"
+  }
+}

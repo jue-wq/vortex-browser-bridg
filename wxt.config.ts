@@ -12,6 +12,7 @@ export default defineConfig({
         : ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "declarativeNetRequest"];
     return {
       name: "Vortex Browser Bridge",
+      default_locale: "en",
       description: "Local-first download capture and privacy filtering for VortexDM.",
       version: "0.2.0",
       permissions,

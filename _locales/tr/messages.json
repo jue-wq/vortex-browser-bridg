@@ -1,0 +1,83 @@
+{
+  "appName": {
+    "message": "Vortex Browser Bridge"
+  },
+  "connected": {
+    "message": "Bağlandı"
+  },
+  "configureLoopback": {
+    "message": "VortexDM yerel bağlantısını yapılandırın"
+  },
+  "localFiltersActive": {
+    "message": "Yerel filtreler etkin"
+  },
+  "defaultQueue": {
+    "message": "Varsayılan kuyruk"
+  },
+  "currentPage": {
+    "message": "Geçerli sayfa"
+  },
+  "grabLinks": {
+    "message": "Sayfa bağlantılarını al"
+  },
+  "extractYtdlp": {
+    "message": "yt-dlp ile medyayı çıkar"
+  },
+  "configureYtdlpFirst": {
+    "message": "Önce VortexDM içinde etkin bir yt-dlp profili yapılandırın."
+  },
+  "openVortexDM": {
+    "message": "VortexDM'yi aç"
+  },
+  "noPage": {
+    "message": "Sayfa seçilmedi"
+  },
+  "captureSettings": {
+    "message": "İndirme yakalama"
+  },
+  "enableCapture": {
+    "message": "İndirme yakalamayı etkinleştir"
+  },
+  "minFileSize": {
+    "message": "En düşük dosya boyutu (MB)"
+  },
+  "excludedDomains": {
+    "message": "Hariç tutulan alan adları"
+  },
+  "allowedDomains": {
+    "message": "İzin verilen alan adları (hariç tutmayı geçersiz kılar)"
+  },
+  "includedExtensions": {
+    "message": "Dahil edilen dosya uzantıları"
+  },
+  "includedMimeTypes": {
+    "message": "Dahil edilen MIME türleri"
+  },
+  "incognitoAllowed": {
+    "message": "Gizli pencerelerde yakalamaya izin ver"
+  },
+  "androidUboTitle": {
+    "message": "Reklam engelleme: orijinal uBlock Origin"
+  },
+  "installUbo": {
+    "message": "uBlock Origin'i Mozilla Eklentileri'nden yükle"
+  },
+  "privacyFiltering": {
+    "message": "Gizlilik filtreleme"
+  },
+  "blockCommon": {
+    "message": "Yaygın reklamları ve izleyicileri engelle"
+  },
+  "androidBridge": {
+    "message": "Android yerel bağlantısı"
+  },
+  "localPort": {
+    "message": "Yerel bağlantı noktası"
+  },
+  "oneTimeKey": {
+    "message": "Tek kullanımlık API anahtarı"
+  },
+  "saveSettings": {
+    "message": "Ayarları kaydet"
+  }
+}

@@ -4,6 +4,8 @@ import { browser } from "wxt/browser";
 import { ConnectionManager } from "../../src/transport/ConnectionManager";
 import "./style.css";
 
+const t=(key:string,fallback:string)=>browser.i18n.getMessage(key)||fallback;
+
 function browserName():"firefox"|"chrome"{return /firefox/i.test(navigator.userAgent)?"firefox":"chrome";}
 function Popup(){
   const [connected,setConnected]=useState(false);
@@ -46,10 +48,10 @@ function Popup(){
   });
   let hostname="No active page";try{if(page)hostname=new URL(page).hostname;}catch{}
   return <main>
-    <header><div class="brand">Vortex<span>DM</span></div><div class={connected?"status on":"status"}>{connected?"Connected":androidFirefox?"Configure VortexDM loopback":"Local filters active"}</div></header>
-    <section class="card"><div class="muted">CURRENT PAGE</div><div class="page">{hostname}</div><div class="row"><span>Detected media</span><strong>{mediaCount}</strong></div><button onClick={extract} disabled={!isHttpUrl(page)||!ytdlpReady}>Extract with yt-dlp</button>{!ytdlpReady?<span class="muted">Configure an active yt-dlp profile in VortexDM first.</span>:null}</section>
+    <header><div class="brand">Vortex<span>DM</span></div><div class={connected?"status on":"status"}>{connected?t("connected","Connected"):androidFirefox?t("configureLoopback","Configure VortexDM loopback"):t("localFiltersActive","Local filters active")}</div></header>
+    <section class="card"><div class="muted">CURRENT PAGE</div><div class="page">{hostname}</div><div class="row"><span>Detected media</span><strong>{mediaCount}</strong></div><button onClick={extract} disabled={!isHttpUrl(page)||!ytdlpReady}>{t("extractYtdlp","Extract with yt-dlp")}</button>{!ytdlpReady?<span class="muted">{t("configureYtdlpFirst","Configure an active yt-dlp profile in VortexDM first.")}</span>:null}</section>
     <section class="privacy"><strong>{androidFirefox?"Original uBlock Origin":"Privacy protection enabled"}</strong><span>{androidFirefox?"Install the original Raymond Hill extension from Firefox Add-ons. Bridge filtering is disabled on Android.":"Ad and tracker rules run locally in this browser."}</span>{androidFirefox?<a href="https://addons.mozilla.org/android/addon/ublock-origin/" target="_blank" rel="noreferrer">Get uBlock Origin</a>:null}</section>
-    <section class="actions"><label class="queue">Queue<select value={queueId} onChange={event=>setQueueId(event.currentTarget.value)}><option value="">Default queue</option>{queues.map(queue=><option value={queue.id}>{queue.name}</option>)}</select></label><button class="secondary" onClick={grab}>Grab page links</button><button class="secondary" onClick={()=>browser.runtime.openOptionsPage()}>Settings</button></section>
+    <section class="actions"><label class="queue">Queue<select value={queueId} onChange={event=>setQueueId(event.currentTarget.value)}><option value="">{t("defaultQueue","Default queue")}</option>{queues.map(queue=><option value={queue.id}>{queue.name}</option>)}</select></label><button class="secondary" onClick={grab}>{t("grabLinks","Grab page links")}</button><button class="secondary" onClick={()=>browser.runtime.openOptionsPage()}>Settings</button></section>
     <footer>Local-first · No analytics · Vortex Browser Bridge 0.2.0</footer>
   </main>;
 }
