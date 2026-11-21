@@ -8,6 +8,7 @@
 - Bridge now has persisted interception settings, 30+ capture-policy cases, media/platform detection, queue-aware batch capture, keyboard/context-menu actions, Android Firefox popup/options, yt-dlp capability gating and loopback HTTP reconnect handling.
 - Media extraction sends URL/title/playlist mode/queue only. It does not read or forward browser cookies; private/authenticated media extraction is not supported.
 - Current authored tests include mock ConnectionManager handshake/correlation/rejection/chunk contract tests and Android HTTP fallback health/API-key/IPC/reconnect tests. They have not yet been included in the final consolidated validation pass.
+- VortexDM now provides user-scoped Windows/Linux Native Messaging registration/uninstall scripts and a build/install guide; Bridge documents the matching host ID and Firefox/Chromium registration flow. Android continues to use loopback, not Native Messaging.
 - Outstanding: real browser Native Messaging host round-trip and timeout, Android Firefox download API/device capability acceptance, filter-list restore/conformance, regex/hostile-CSS tests, 150+ link end-to-end batch, app-to-extension live task state, TR/EN localization, store metadata and signed packages.
 - Branding: user-supplied VortexDM artwork is configured as the extension toolbar/action icon.
 - No phase is marked DONE.
