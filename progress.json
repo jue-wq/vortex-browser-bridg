@@ -64,12 +64,14 @@
         "filter_syntax_conformance": false,
         "cookie_consent_e2e": false,
         "android_ublock_scope": true,
-        "android_bridge_filter_disabled": true
+        "android_bridge_filter_disabled": true,
+        "media_cookie_privacy": true
       },
       "evidence": [
         "Built-in filter engine and Ghostery integration compile and pass current unit/build pipeline; filter update/cache tests and browser E2E pending.",
         "Android filtering is delegated to original Raymond Hill uBlock Origin installed from Mozilla Add-ons in Firefox for Android; Bridge Android remains download handoff.",
-        "Commit f27ef83 disables Bridge's adblock controller on Firefox for Android and exposes official Mozilla uBO installation instead; CI pending."
+        "Commit f27ef83 disables Bridge's adblock controller on Firefox for Android and exposes official Mozilla uBO installation instead; CI pending.",
+        "Commit 12b40ac removes the cookie collection prompt and sends no session cookies; authenticated media extraction remains unsupported until a secure ephemeral cookie handoff is implemented."
       ]
     },
     {
