@@ -102,7 +102,7 @@ export default defineBackground({
       const decision=decideCapture({url:item.url,filename:item.filename,totalBytes:item.totalBytes,incognito:item.incognito},settings);
       if(!decision.capture||!item.url)return;
       const candidate=addDownloadPayloadSchema.safeParse({
-        url:item.url,headers:{},cookies:[],auto_start:true,
+        url:item.url,headers:{},auto_start:true,
         ...(item.filename?{filename:item.filename}:{}),
         ...(item.referrer&&isHttpUrl(item.referrer)?{referrer:item.referrer,download_page:item.referrer}:{})
       });
@@ -120,7 +120,7 @@ export default defineBackground({
 
     async function sendDownload(url:string,page?:string,queueId?:string):Promise<void>{
       if(!isHttpUrl(url))return;
-      const payload=addDownloadPayloadSchema.safeParse({url,headers:{},cookies:[],auto_start:true,...(page&&isHttpUrl(page)?{download_page:page}:{}),...(queueId?{queue_id:queueId}:{})});
+      const payload=addDownloadPayloadSchema.safeParse({url,headers:{},auto_start:true,...(page&&isHttpUrl(page)?{download_page:page}:{}),...(queueId?{queue_id:queueId}:{})});
       if(payload.success)await connection.request("add_download",payload.data).catch(()=>undefined);
     }
 

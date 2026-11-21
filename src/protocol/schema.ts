@@ -1,10 +1,5 @@
 import { z } from "zod";
 
-export const cookieSchema = z.object({
-  name: z.string(), value: z.string(), domain: z.string(), path: z.string(),
-  secure: z.boolean(), http_only: z.boolean(), expires: z.number().optional()
-}).strict();
-
 export const envelopeSchema = z.object({
   protocol_version: z.literal(1),
   type: z.string().min(1),
@@ -23,7 +18,6 @@ export const addDownloadPayloadSchema = z.object({
   url: z.string().url(),
   filename: z.string().optional(),
   headers: z.record(z.string()),
-  cookies: z.array(cookieSchema),
   referrer: z.string().url().optional(),
   download_page: z.string().url().optional(),
   auto_start: z.boolean(),
@@ -64,7 +58,6 @@ export const taskControlPayloadSchema = z.object({
 }).strict();
 
 export type IpcEnvelope = z.infer<typeof envelopeSchema>;
-export type CookiePayload = z.infer<typeof cookieSchema>;
 export type AddDownloadPayload = z.infer<typeof addDownloadPayloadSchema>;
 export type AddBatchPayload = z.infer<typeof addBatchPayloadSchema>;
 export type OutgoingMessageType = "handshake" | "add_download" | "extract_media" | "add_batch" | "add_batch_chunk" | "task_control";
