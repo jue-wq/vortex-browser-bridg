@@ -4,7 +4,9 @@ const KNOWN_HOSTS = new Set([
 ]);
 export interface YtDlpDetection {supported: boolean; host: string; playlist: boolean;}
 export function detectYtDlpPage(input: string, customDomains: string[] = []): YtDlpDetection {
-  const url = new URL(input);
+  let url: URL;
+  try { url = new URL(input); } catch { return {supported:false,host:"",playlist:false}; }
+  if (!["http:","https:"].includes(url.protocol)) return {supported:false,host:url.hostname.toLowerCase(),playlist:false};
   const host = url.hostname.toLowerCase().replace(/^www\./, "");
   const allDomains = [...KNOWN_HOSTS, ...customDomains.map(value => value.toLowerCase())];
   const supported = allDomains.some(domain => host === domain || host.endsWith(`.${domain}`));

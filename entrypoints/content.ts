@@ -8,7 +8,8 @@ export default defineContentScript({
   matchAboutBlank:true,
   runAt:"document_start",
   main() {
-    void applyCosmeticFilters();
+    const firefoxAndroid = /firefox/i.test(navigator.userAgent) && /android/i.test(navigator.userAgent);
+    if (!firefoxAndroid) void applyCosmeticFilters();
     const host=document.createElement("div");
     host.id="vortexdm-shadow-host";
     const shadow=host.attachShadow({mode:"closed"});

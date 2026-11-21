@@ -9,6 +9,7 @@ function Popup(){
   const [connected,setConnected]=useState(false);
   const [mediaCount,setMediaCount]=useState(0);
   const [page,setPage]=useState("");
+  const androidFirefox=/firefox/i.test(navigator.userAgent)&&/android/i.test(navigator.userAgent);
   useEffect(()=>{
     let alive=true;
     void browser.tabs.query({active:true,currentWindow:true}).then(async tabs=>{
@@ -18,7 +19,7 @@ function Popup(){
       setMediaCount(media.filter(item=>item.tabId===tab?.id).length);
     });
     const connection=new ConnectionManager();
-    void connection.request("handshake",{ext_version:"0.2.0",browser:browserName(),capabilities:["downloads","media-sniffer","batch","adblock"]})
+    void connection.request("handshake",{ext_version:"0.2.0",browser:browserName(),capabilities:androidFirefox?["downloads","media-sniffer","batch","original-ublock-origin-external"]:["downloads","media-sniffer","batch","adblock"]})
       .then(()=>{if(alive)setConnected(true);}).catch(()=>{if(alive)setConnected(false);});
     return ()=>{alive=false;connection.disconnect();};
   },[]);
@@ -40,7 +41,7 @@ function Popup(){
   return <main>
     <header><div class="brand">Vortex<span>DM</span></div><div class={connected?"status on":"status"}>{connected?"Connected":"Local filters active"}</div></header>
     <section class="card"><div class="muted">CURRENT PAGE</div><div class="page">{hostname}</div><div class="row"><span>Detected media</span><strong>{mediaCount}</strong></div><button onClick={extract} disabled={!isHttpUrl(page)}>Extract with yt-dlp</button></section>
-    <section class="privacy"><strong>Privacy protection enabled</strong><span>Ad and tracker rules run locally in this browser.</span></section>
+    <section class="privacy"><strong>{androidFirefox?"Original uBlock Origin":"Privacy protection enabled"}</strong><span>{androidFirefox?"Install the original Raymond Hill extension from Firefox Add-ons. Bridge filtering is disabled on Android.":"Ad and tracker rules run locally in this browser."}</span>{androidFirefox?<a href="https://addons.mozilla.org/android/addon/ublock-origin/" target="_blank" rel="noreferrer">Get uBlock Origin</a>:null}</section>
     <section class="actions"><button class="secondary" onClick={grab}>Grab page links</button><button class="secondary" onClick={()=>browser.runtime.openOptionsPage()}>Settings</button></section>
     <footer>Local-first · No analytics · Vortex Browser Bridge 0.2.0</footer>
   </main>;
