@@ -31,7 +31,7 @@ function Popup(){
         const valid=received.flatMap(item=>{
           if(!item||typeof item!=="object")return [];
           const value=item as {id?:unknown;name?:unknown};
-          return typeof value.id==="string"&&typeof value.name==="string"?[{id:value.id,name:value.name}]:[];
+          return typeof value.id==="string"&&typeof value.name==="string"&&value.id!=="default"?[{id:value.id,name:value.name}]:[];
         });
         setQueues(valid);
       }).catch(()=>{if(alive)setConnected(false);});
