@@ -1,0 +1,33 @@
+{
+  "name": "vortex-browser-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build:chrome": "wxt build -b chrome",
+    "build:firefox": "wxt build -b firefox",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:types": "tsc --noEmit",
+    "check:progress": "python tools/check_progress.py",
+    "check": "npm run check:progress && npm run check:types && npm test"
+  },
+  "dependencies": {
+    "preact": "^10.25.4",
+    "webextension-polyfill": "^0.12.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.302",
+    "@types/node": "^22.10.5",
+    "@types/webextension-polyfill": "^0.12.3",
+    "@preact/preset-vite": "^2.9.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "wxt": "^0.19.29"
+  }
+}

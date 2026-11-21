@@ -1,0 +1,32 @@
+name: Browser Bridge CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm install
+      - run: npm run check
+      - run: npm run build:chrome
+      - run: npm run build:firefox
+  protocol-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: browser-bridge
+      - uses: actions/checkout@v4
+        with:
+          repository: jue-wq/VortexDM
+          path: VortexDM
+      - run: diff -u VortexDM/docs/IPC_PROTOCOL.md browser-bridge/docs/IPC_PROTOCOL.md

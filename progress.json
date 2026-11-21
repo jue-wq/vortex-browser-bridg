@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "project": "Vortex Browser Bridge",
+  "current_phase": 1,
+  "phases": [
+    {"id":1,"name":"WXT protocol and transport","status":"IN_PROGRESS","checks":{"wxt_base":true,"protocol_schema":true,"native_transport":true,"chunker":true,"typecheck":false,"browser_builds":false,"mock_host_e2e":false},"evidence":["Extension baseline committed; typecheck/build/E2E verification pending."]},
+    {"id":2,"name":"Download interception","status":"IN_PROGRESS","checks":{"rule_engine":true,"header_cache":true,"rule_matrix":false,"safe_fallback_e2e":false,"header_concurrency":false},"evidence":["Pure rule engine and TTL header cache added; browser integration remains incomplete."]},
+    {"id":3,"name":"Media and yt-dlp bridge","status":"IN_PROGRESS","checks":{"media_detector":true,"platform_detector":true,"manifest_recovery":false,"consented_cookies":false,"extract_ui":false},"evidence":["Direct media and platform detector baselines implemented."]},
+    {"id":4,"name":"Content scripts and batch grabber","status":"IN_PROGRESS","checks":{"shadow_dom":true,"page_scanner":true,"context_menus":false,"filters":false,"large_batch_e2e":false},"evidence":["Closed Shadow DOM and link scanner baselines implemented."]},
+    {"id":5,"name":"Popup options and store release","status":"IN_PROGRESS","checks":{"popup_shell":true,"options_shell":true,"live_tasks":false,"settings":false,"localization":false,"release_packages":false},"evidence":["Preact popup and options shells added; production UX/store validation pending."]}
+  ]
+}

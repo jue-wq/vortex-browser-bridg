@@ -1,0 +1,42 @@
+export interface InterceptionSettings {
+  enabled: boolean;
+  minSizeBytes: number;
+  excludedDomains: string[];
+  allowedDomains: string[];
+  incognitoAllowed: boolean;
+  bypassPressed: boolean;
+  includedMimeTypes: string[];
+  includedExtensions: string[];
+}
+export interface DownloadCandidate {
+  url: string;
+  filename?: string;
+  mimeType?: string;
+  totalBytes?: number;
+  incognito?: boolean;
+}
+export type RuleDecision = {capture: true; reason: "matched"} | {capture: false; reason: string};
+
+export function decideCapture(candidate: DownloadCandidate, settings: InterceptionSettings): RuleDecision {
+  if (!settings.enabled) return {capture: false, reason: "disabled"};
+  if (candidate.incognito && !settings.incognitoAllowed) return {capture: false, reason: "incognito"};
+  if (settings.bypassPressed) return {capture: false, reason: "bypass"};
+  let host: string;
+  try { host = new URL(candidate.url).hostname.toLowerCase(); }
+  catch { return {capture: false, reason: "invalid-url"}; }
+  if (!["http:", "https:"].includes(new URL(candidate.url).protocol)) return {capture: false, reason: "scheme"};
+  if (settings.excludedDomains.some(domain => host === domain || host.endsWith(`.${domain}`))) return {capture: false, reason: "excluded-domain"};
+  if (settings.allowedDomains.length && !settings.allowedDomains.some(domain => host === domain || host.endsWith(`.${domain}`))) return {capture: false, reason: "not-allowed-domain"};
+  if (candidate.totalBytes !== undefined && candidate.totalBytes >= 0 && candidate.totalBytes < settings.minSizeBytes) return {capture: false, reason: "below-size"};
+  const extension = (candidate.filename ?? candidate.url).split(/[?#]/, 1)[0]?.split(".").pop()?.toLowerCase() ?? "";
+  const mime = (candidate.mimeType ?? "").toLowerCase();
+  const matches = settings.includedExtensions.includes(extension) || settings.includedMimeTypes.some(type => mime.startsWith(type));
+  if (settings.includedExtensions.length || settings.includedMimeTypes.length) {
+    if (!matches) return {capture: false, reason: "type-not-included"};
+  }
+  return {capture: true, reason: "matched"};
+}
+export const defaultInterceptionSettings: InterceptionSettings = {
+  enabled: true, minSizeBytes: 0, excludedDomains: [], allowedDomains: [],
+  incognitoAllowed: false, bypassPressed: false, includedMimeTypes: [], includedExtensions: []
+};
