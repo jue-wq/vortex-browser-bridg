@@ -36,9 +36,7 @@ function Options(){
       <article><h3>uBlock-Origin-style privacy filtering</h3>
         <label><input type="checkbox" checked={adblockEnabled} onChange={event=>setAdblockEnabled(event.currentTarget.checked)}/> Block common ads and trackers</label>
         <p>Local network rules, allow exceptions and cosmetic filters are applied without analytics. Supported rule forms include <code>||domain^</code>, <code>@@||domain^</code>, <code>##.selector</code> and <code>example.org##.selector</code>.</p>
-        <label class="stack">Custom filter rules<textarea rows={8} value={customRules} onInput={event=>setCustomRules(event.currentTarget.value)} placeholder={"||ads.example^
-@@||trusted.example^
-##.sponsored"} /></label>
+        <label class="stack">Custom filter rules<textarea rows={8} value={customRules} onInput={event=>setCustomRules(event.currentTarget.value)} placeholder={"||ads.example^\n@@||trusted.example^\n##.sponsored"} /></label>
         <p>Paste ABP/uBO-style rules here. Unsupported advanced syntax is ignored; this is not full uBlock Origin feature parity.</p>
       </article>
       <article><h3>Media & privacy</h3><label>Cookie transfer policy <select value={cookiePolicy} onChange={event=>setCookiePolicy(event.currentTarget.value)}><option value="ask">Ask every time</option><option value="media">Media sites only</option><option value="never">Never</option></select></label><p>Cookies are read only after a user action and are not written to extension storage.</p></article>

@@ -49,7 +49,7 @@ const RESOURCE_TYPES: Record<string, ResourceType> = {
 };
 
 function domainMatches(host: string, ruleHost: string): boolean {
-  return host === ruleHost || host.endsWith(`.${ruleHost}`);
+  return host === ruleHost || host.endsWith(\`.\${ruleHost}\`);
 }
 function cleanSelector(selector: string): string | null {
   const value = selector.trim();
@@ -128,7 +128,7 @@ export class FilterEngine {
     let sourceHost = "";
     try { sourceHost = context.initiator ? new URL(context.initiator).hostname.toLowerCase() : ""; } catch { /* no initiator */ }
     const matching = this.networkRules.filter(rule => {
-      if (!rule.host || !domainMatches(target.hostname.toLowerCase(), rule.host!)) return false;
+      if (!rule.host || !domainMatches(target.hostname.toLowerCase(), rule.host)) return false;
       if (rule.path && !target.pathname.startsWith(rule.path)) return false;
       if (rule.types.length && context.type && !rule.types.includes(context.type as ResourceType)) return false;
       if (rule.types.length && !context.type) return false;
@@ -137,9 +137,9 @@ export class FilterEngine {
       if (rule.excludedDomains.some(domain => sourceHost && domainMatches(sourceHost, domain))) return false;
       return true;
     });
-    if (matching.some(rule => rule.exception && rule.important)) return false;
-    if (matching.some(rule => !rule.exception)) return true;
-    return false;
+    if (matching.some(rule => !rule.exception && rule.important)) return true;
+    if (matching.some(rule => rule.exception)) return false;
+    return matching.some(rule => !rule.exception);
   }
 
   getCosmeticSelectors(hostname: string): string[] {
