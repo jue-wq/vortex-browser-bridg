@@ -60,7 +60,7 @@ function parseNetworkRule(line:string):NetworkRule|null {
       }
     }else if(RESOURCE_TYPES[token])types.push(RESOURCE_TYPES[token]!);
   }
-  return {raw:line,pattern,host,...(path?{path}:{}),exception,important:tokens.includes("important"),thirdParty,types,domains,excludedDomains};
+  return {raw:line,pattern,host,...(path?{path}:{}),exception,important:tokens.includes("important"),...(thirdParty===undefined?{}:{thirdParty}),types,domains,excludedDomains};
 }
 function parseCosmeticRule(line:string):CosmeticRule|null {
   const marker=line.includes("#@#")?"#@#":"##";

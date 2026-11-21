@@ -6,7 +6,6 @@ import { HttpFallbackTransport } from "./HttpFallbackTransport";
 
 export class ConnectionManager {
   private transport: ITransport | null = null;
-  private initialized = false;
 
   private async ensureTransport(): Promise<ITransport> {
     if (this.transport) return this.transport;
@@ -26,7 +25,6 @@ export class ConnectionManager {
   async connect(): Promise<void> {
     const transport = await this.ensureTransport();
     await transport.connect();
-    this.initialized = true;
   }
 
   async request(type:OutgoingMessageType,payload:Record<string,unknown>,timeoutMs=1500):Promise<ReturnType<typeof validateEnvelope>> {
@@ -42,7 +40,6 @@ export class ConnectionManager {
   useTransport(transport:ITransport):void {
     this.transport?.disconnect();
     this.transport=transport;
-    this.initialized=false;
   }
-  disconnect():void {this.transport?.disconnect();this.initialized=false;}
+  disconnect():void {this.transport?.disconnect();}
 }

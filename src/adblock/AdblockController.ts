@@ -85,7 +85,11 @@ export class AdblockController {
     const webRequest = (browser as unknown as {webRequest?:BlockingApi}).webRequest;
     if (!webRequest || this.fallbackListener) return;
     this.fallbackListener = details => ({
-      cancel:this.enabled && this.engine.shouldBlock({url:details.url,initiator:details.initiator,type:details.type})
+      cancel:this.enabled && this.engine.shouldBlock({
+        url:details.url,
+        ...(details.initiator ? {initiator:details.initiator} : {}),
+        ...(details.type ? {type:details.type} : {})
+      })
     });
     webRequest.onBeforeRequest.addListener(this.fallbackListener,{urls:["http://*/*","https://*/*"]},["blocking"]);
   }

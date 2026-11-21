@@ -1,4 +1,5 @@
 import { browser } from "wxt/browser";
+import { defineContentScript } from "wxt/sandbox";
 import { injectCosmetics } from "@ghostery/adblocker-webextension-cosmetics";
 import { DEFAULT_FILTER_RULES, FilterEngine } from "../src/adblock/FilterEngine";
 
