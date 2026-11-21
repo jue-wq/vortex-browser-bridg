@@ -1,12 +1,12 @@
 {
-  "schema_version": 1,
-  "project": "Vortex Browser Bridge",
-  "current_phase": 1,
-  "phases": [
-    {"id":1,"name":"WXT protocol and transport","status":"IN_PROGRESS","checks":{"wxt_base":true,"protocol_schema":true,"native_transport":true,"chunker":true,"typecheck":false,"browser_builds":false,"mock_host_e2e":false},"evidence":["Extension baseline committed; typecheck/build/E2E verification pending."]},
-    {"id":2,"name":"Download interception","status":"IN_PROGRESS","checks":{"rule_engine":true,"header_cache":true,"rule_matrix":false,"safe_fallback_e2e":false,"header_concurrency":false},"evidence":["Pure rule engine and TTL header cache added; browser integration remains incomplete."]},
-    {"id":3,"name":"Media and yt-dlp bridge","status":"IN_PROGRESS","checks":{"media_detector":true,"platform_detector":true,"manifest_recovery":false,"consented_cookies":false,"extract_ui":false},"evidence":["Direct media and platform detector baselines implemented."]},
-    {"id":4,"name":"Content scripts and batch grabber","status":"IN_PROGRESS","checks":{"shadow_dom":true,"page_scanner":true,"context_menus":false,"filters":false,"large_batch_e2e":false},"evidence":["Closed Shadow DOM and link scanner baselines implemented."]},
-    {"id":5,"name":"Popup options and store release","status":"IN_PROGRESS","checks":{"popup_shell":true,"options_shell":true,"live_tasks":false,"settings":false,"localization":false,"release_packages":false},"evidence":["Preact popup and options shells added; production UX/store validation pending."]}
+  "schema_version":1,"project":"Vortex Browser Bridge","current_phase":1,
+  "targets":["chromium-desktop-mv3","firefox-desktop-mv3","firefox-android-mv2"],
+  "excluded_targets":["google-chrome-android"],
+  "phases":[
+    {"id":1,"name":"WXT protocol and transports","status":"IN_PROGRESS","checks":{"wxt_base":true,"protocol_schema":true,"native_transport":true,"android_loopback_transport_shell":true,"chunker":true,"typecheck":false,"chrome_mv3_build":false,"firefox_desktop_mv3_build":false,"firefox_android_mv2_build":false,"mock_host_e2e":false},"evidence":["Platform split committed; CI verification pending. Earlier protocol-sync passed; verify job was previously blocked by missing npm lockfile cache configuration, now corrected."]},
+    {"id":2,"name":"Download interception","status":"IN_PROGRESS","checks":{"rule_engine":true,"header_cache":true,"safe_fallback":true,"rule_matrix":false,"android_download_capability_tests":false},"evidence":["Pure rule engine and TTL header cache added; cross-browser E2E pending."]},
+    {"id":3,"name":"Media, extraction and privacy filtering","status":"IN_PROGRESS","checks":{"media_detector":true,"platform_detector":true,"adblock_parser":true,"exceptions_and_cosmetics":true,"dnr_adapter":true,"firefox_blocking_adapter":true,"filter_syntax_conformance":false,"cookie_consent_e2e":false},"evidence":["Local filter engine, DNR/webRequest adapters and cosmetic filter path added; test/build verification pending."]},
+    {"id":4,"name":"Content scripts and batch grabber","status":"IN_PROGRESS","checks":{"shadow_dom":true,"page_scanner":true,"cosmetic_filter_application":true,"context_menus":false,"filters_and_queue_ui":false,"large_batch_e2e":false},"evidence":["Closed Shadow DOM, scanner and cosmetic filter injection implemented."]},
+    {"id":5,"name":"Popup options and distribution","status":"IN_PROGRESS","checks":{"popup_shell":true,"options_shell":true,"filter_settings":true,"android_bridge_settings":true,"live_tasks":false,"localization":false,"android_real_device_e2e":false,"release_packages":false},"evidence":["UI settings and Firefox Android MV2 packaging target added; device and store validation pending."]}
   ]
 }

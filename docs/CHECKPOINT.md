@@ -1,8 +1,10 @@
 # Durable checkpoint
 
 - Current phase: 1 of 5 (IN_PROGRESS)
-- Implemented baseline: WXT configuration, strict TypeScript, shared IPC v1 schema, chunker, Native Messaging transport, opt-in loopback HTTP transport, connection manager, interception rules, header TTL cache, media detector, platform detector, Shadow DOM page scanner, Preact popup/options shells, Vitest tests, progress validator and CI.
-- CI findings: protocol-sync job passed. Verify job stopped at setup-node because npm cache was enabled without a lockfile. Cache setting removed; dependency install/typecheck/Vitest/production builds have not yet run.
+- Platform scope: Chromium desktop MV3, Firefox desktop MV3 and Firefox Android MV2. Google Chrome Android is not an extension target.
+- Adblocking scope: bundled local filter engine, network exceptions, resource/domain constraints, cosmetic filter subset, user rules, DNR/Firefox webRequest adapters.
+- Transport scope: Native Messaging desktop; Android localhost transport settings only. Android app-side HTTP server is not implemented yet.
+- CI findings: protocol sync passed on prior workflow. The verify job initially stopped because setup-node npm cache required a lock file; cache was removed before package install, and new build/test run is pending.
+- Resume: `npm install`, `npm run check`, `npm run build:chrome`, `npm run build:firefox`, `npm run build:firefox:android`; fix issues and record run URL/SHA.
 - No phase is marked DONE.
-- Resume: read progress.json; run `npm install`, `npm run check`, `npm run build:chrome`, and `npm run build:firefox`; fix issues; append run URL and commit SHA evidence.
-- Next task: verify WXT builds, generate a lockfile and add a mocked Native Messaging round-trip suite.
+- Next task: validate WXT APIs/TypeScript and all browser builds, then add filter-list conformance and Android real-device tests.
