@@ -10,13 +10,15 @@ A checked item means implementation exists; phase completion requires all accept
 - [x] Batch chunker baseline
 - [ ] Clean typecheck and tests green
 - [ ] Chrome MV3, Firefox desktop MV3 and Firefox Android MV2 builds green
-- [ ] Mock host handshake, timeout and chunk round-trip tests
+- [x] Mock transport handshake/correlation, rejection ACK and chunk round-trip contract tests
+- [ ] Real Native Messaging host handshake, timeout and browser-host round-trip acceptance
 
 ## Phase 2 — Download interception
 - [x] Pure download rule engine
 - [x] Header TTL cache
 - [x] Safe 1,500 ms ACK-or-browser-fallback code path
-- [ ] 30+ rule matrix and host-unavailable E2E tests
+- [x] 30+ interception rule matrix cases
+- [ ] Host-unavailable browser E2E tests
 - [ ] Android Firefox download API capability matrix and handoff tests
 
 ## Phase 3 — Media, extraction and privacy filtering
@@ -35,7 +37,8 @@ A checked item means implementation exists; phase completion requires all accept
 - [x] Closed Shadow DOM UI baseline
 - [x] Page link scanner
 - [x] Ghostery cosmetics content-script integration for Firefox
-- [ ] Context menus, keyboard commands, regex/extension filters and queue selector
+- [x] Context menus, keyboard commands, extension filters and app-provided batch queue selector
+- [ ] Regex filters and hostile-CSS E2E
 - [ ] 150+ link chunked transfer and hostile-CSS E2E
 
 ## Phase 5 — Popup, settings and store release

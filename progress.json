@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "Vortex Browser Bridge",
-  "current_phase": 1,
+  "current_phase": 4,
   "targets": [
     "chromium-desktop-mv3",
     "firefox-desktop-mv3",
@@ -25,10 +25,12 @@
         "chrome_mv3_build": true,
         "firefox_desktop_mv3_build": true,
         "firefox_android_mv2_build": true,
-        "mock_host_e2e": false
+        "mock_host_e2e": false,
+        "mock_host_contract_tests": true
       },
       "evidence": [
-        "CI run 44953304877 passed: npm install, WXT prepare/typecheck, Vitest, Chrome MV3 build, Firefox desktop MV3 build and Firefox Android MV2 build. Protocol sync against VortexDM also passed. Mock native-host handshake and chunk round-trip E2E remain pending."
+        "CI run 44953304877 passed: npm install, WXT prepare/typecheck, Vitest, Chrome MV3 build, Firefox desktop MV3 build and Firefox Android MV2 build. Protocol sync against VortexDM also passed. Mock native-host handshake and chunk round-trip E2E remain pending.",
+        "Commit 9ac565c adds mock-host ConnectionManager handshake, correlation, explicit rejection ACK, large-batch chunk ACK and missing-response tests. Actual browser Native Messaging host E2E remains pending."
       ]
     },
     {
@@ -39,11 +41,12 @@
         "rule_engine": true,
         "header_cache": true,
         "safe_fallback": true,
-        "rule_matrix": false,
+        "rule_matrix": true,
         "android_download_capability_tests": false
       },
       "evidence": [
-        "Pure rule engine and TTL header cache added; cross-browser E2E pending."
+        "Pure rule engine and TTL header cache added; cross-browser E2E pending.",
+        "Commits 37565ab/4749689 normalize domain, MIME and extension rules; commits 3d9e7d7/f18420c add a 30+ case capture policy matrix. Host-unavailable browser E2E remains pending."
       ]
     },
     {
@@ -78,12 +81,15 @@
         "page_scanner": true,
         "cosmetic_filter_application": true,
         "ghostery_cosmetics": true,
-        "context_menus": false,
+        "context_menus": true,
         "filters_and_queue_ui": false,
-        "large_batch_e2e": false
+        "large_batch_e2e": false,
+        "keyboard_commands": true,
+        "queue_selector": true
       },
       "evidence": [
-        "Closed Shadow DOM, scanner and Ghostery cosmetics bridge compile in all three browser targets."
+        "Closed Shadow DOM, scanner and Ghostery cosmetics bridge compile in all three browser targets.",
+        "Commits 6307584 and 195db4b add keyboard actions and queue-aware batch grabber selection."
       ]
     },
     {
@@ -100,11 +106,13 @@
         "localization": false,
         "android_real_device_e2e": false,
         "release_packages": false,
-        "extension_icon": true
+        "extension_icon": true,
+        "interception_settings": true
       },
       "evidence": [
         "Settings UI, full-filter opt-in and Android Firefox build target compile; device and store validation pending.",
-        "User-supplied VortexDM artwork configured as WebExtension manifest and toolbar action icon; commit 4fd04a3."
+        "User-supplied VortexDM artwork configured as WebExtension manifest and toolbar action icon; commit 4fd04a3.",
+        "Commit e6c784a persists interception settings and applies them to the background download decision engine."
       ]
     }
   ]
