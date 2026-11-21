@@ -5,8 +5,8 @@ WXT + strict TypeScript + Preact extension for desktop Chromium/Firefox and Fire
 ## Supported targets
 - Chrome/Edge/Brave/Vivaldi desktop: Manifest V3, DNR-based network blocking.
 - Firefox desktop: Manifest V3 (and Firefox MV2 compatibility build), webRequest-based filtering.
-- Firefox for Android: Manifest V2 non-persistent event page; full extension UI, ad/tracker filtering, cosmetic filters and local loopback handoff.
-- Other Android Chromium forks: best-effort only after per-browser compatibility tests.
+- Firefox for Android: Manifest V2 non-persistent event page; popup/options, link/media capture and authenticated local loopback handoff. Ad/tracker and cosmetic filtering are delegated to the original uBlock Origin add-on; Bridge's own filter engine is disabled on Android.
+- Other Android Chromium forks: unsupported until per-browser API compatibility is proven.
 - **Google Chrome for Android is not supported** because it does not provide an extension host.
 
 ## Android ad blocking: original uBlock Origin

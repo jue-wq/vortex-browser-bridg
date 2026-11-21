@@ -1,19 +1,14 @@
 # Durable checkpoint
 
-- Current phase: 1 of 5 (IN_PROGRESS)
-- Platform scope: Chromium desktop MV3, Firefox desktop MV3 and Firefox Android MV2. Google Chrome Android is not an extension target.
-- Android ad-blocking decision: use original Raymond Hill uBlock Origin from the official Mozilla Add-ons listing in Firefox for Android. Browser Bridge Android handles download handoff only; its Ghostery/local filtering engine is not the Android blocker and must not duplicate uBO. See VortexDM docs/ANDROID_UBO_INTEGRATION.md.
-- Android code change: AdblockController and the content script both skip Bridge network/cosmetic filters on Firefox for Android; popup/options show the official Mozilla uBO listing. Commit 75dc034.
-- Adblocking: built-in DNR-compatible rules for Chromium and optional MPL-2.0 Ghostery WebExtension engine (EasyList/EasyPrivacy-compatible) on Firefox. Full filter subscriptions require explicit user action and compiled rules are cached in IndexedDB.
-- Transport: Native Messaging on desktop; Android localhost transport settings only. Android app-side HTTP server is not implemented yet.
-- CI evidence: run 44953304877 completed successfully: npm install, WXT prepare/typecheck, 12 Vitest cases, Chrome MV3 build, Firefox desktop MV3 build, Firefox Android MV2 build; protocol sync comparison passed.
-- Bridge additions: persisted interception settings (size/domain/MIME/extension/incognito), mock transport contract tests, 30+ rule matrix tests, media/yt-dlp detector tests, keyboard commands, and app-provided queue selection for batch capture. Commits e6c784a, 3d9e7d7, 9ac565c, a85519c, 6307584, 195db4b.
-- Android loopback transport now clears its connected state after HTTP/network failures so the next request re-runs the health check. Tests cover health auth, IPC endpoint, API-key header and reconnect. Commit 970127a; test fixture aa7dbe4.
-- Media extraction no longer prompts for or gathers cookies because VortexDM does not yet support passing authenticated sessions to yt-dlp. It sends URL/title and selected queue only; popup gates extraction on VortexDM's active yt-dlp profile capability. Commit 12b40ac.
-- Outstanding: real browser Native Messaging handshake/timeout E2E, Android Firefox download capability tests, filter-list restore/conformance, regex filters, hostile CSS tests, physical-device app loopback integration and release packages.
-- Branding: user-supplied VortexDM artwork is installed as `public/icon-32.png` and referenced by the WebExtension manifest and toolbar action.
-- CI run `44955855449` exposed a party-modifier unit-test expectation issue; the fixture was corrected to test a true parent/child hostname relationship, while sibling registrable domains remain third-party. Fix commit `b1359d7a7c198e71b5959749bfa5d62a2c19a4dc` is awaiting CI.
+- Current phase: 5 of 5 (IN_PROGRESS; final consolidated tests/builds intentionally deferred until all implementation work is complete).
+- Targets: Chromium desktop MV3, Firefox desktop MV3 and Firefox for Android MV2. Google Chrome for Android is not supported.
+- Android ad blocking: original Raymond Hill uBlock Origin from Mozilla Add-ons in Firefox for Android. Browser Bridge disables its own Android network/cosmetic filters and handles downloads only. See VortexDM docs/ANDROID_UBO_INTEGRATION.md.
+- Desktop ad blocking: Chromium DNR-compatible rules; Firefox desktop uses the MPL-2.0 Ghostery engine and EasyList/EasyPrivacy-compatible subscriptions. These are not presented as uBO parity.
+- Desktop transport: Native Messaging. Android transport: authenticated HTTP to 127.0.0.1 using the ephemeral port and 256-bit API key shown by VortexDM. Enter both in Bridge options after each VortexDM app restart.
+- Bridge now has persisted interception settings, 30+ capture-policy cases, media/platform detection, queue-aware batch capture, keyboard/context-menu actions, Android Firefox popup/options, yt-dlp capability gating and loopback HTTP reconnect handling.
+- Media extraction sends URL/title/playlist mode/queue only. It does not read or forward browser cookies; private/authenticated media extraction is not supported.
+- Current authored tests include mock ConnectionManager handshake/correlation/rejection/chunk contract tests and Android HTTP fallback health/API-key/IPC/reconnect tests. They have not yet been included in the final consolidated validation pass.
+- Outstanding: real browser Native Messaging host round-trip and timeout, Android Firefox download API/device capability acceptance, filter-list restore/conformance, regex/hostile-CSS tests, 150+ link end-to-end batch, app-to-extension live task state, TR/EN localization, store metadata and signed packages.
+- Branding: user-supplied VortexDM artwork is configured as the extension toolbar/action icon.
 - No phase is marked DONE.
-- Resume: read progress.json; run npm run check; run npm run build:chrome, npm run build:firefox and npm run build:firefox:android; implement and test mock-host round trips; record the next CI URL/SHA.
-- Latest fix: corrected `$third-party`/`$~third-party` test coverage to distinguish parent-child hostnames from sibling registrable domains. Await run `44955994248` before recording pass evidence.
-- Next task: finish mock-host transport E2E, then expand download interception rule matrix and test the safe fallback.
+- Next implementation priorities: finish real browser/app E2E and large-batch/hostile-CSS acceptance, complete localization/store packaging, then run the full final test/build matrix and fix all failures.

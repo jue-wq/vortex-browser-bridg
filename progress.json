@@ -71,7 +71,8 @@
         "Built-in filter engine and Ghostery integration compile and pass current unit/build pipeline; filter update/cache tests and browser E2E pending.",
         "Android filtering is delegated to original Raymond Hill uBlock Origin installed from Mozilla Add-ons in Firefox for Android; Bridge Android remains download handoff.",
         "Commit f27ef83 disables Bridge's adblock controller on Firefox for Android and exposes official Mozilla uBO installation instead; CI pending.",
-        "Commit 12b40ac removes the cookie collection prompt and sends no session cookies; authenticated media extraction remains unsupported until a secure ephemeral cookie handoff is implemented."
+        "Commit 12b40ac removes the cookie collection prompt and sends no session cookies; authenticated media extraction remains unsupported until a secure ephemeral cookie handoff is implemented.",
+        "Commit 76ef69d removes all cookie collection/forwarding from background media extraction; public-only URL/title requests remain, while authenticated media support and E2E are pending."
       ]
     },
     {
@@ -116,7 +117,8 @@
         "Settings UI, full-filter opt-in and Android Firefox build target compile; device and store validation pending.",
         "User-supplied VortexDM artwork configured as WebExtension manifest and toolbar action icon; commit 4fd04a3.",
         "Commit e6c784a persists interception settings and applies them to the background download decision engine.",
-        "Commit 970127a resets Android HTTP transport connection state after request failures; test suite aa7dbe4 covers health auth, API key, IPC request, server failure and reconnect. Execution remains deferred until final validation."
+        "Commit 970127a resets Android HTTP transport connection state after request failures; test suite aa7dbe4 covers health auth, API key, IPC request, server failure and reconnect. Execution remains deferred until final validation.",
+        "Commit 76ef69d ensures the background never reads or forwards browser cookies for extraction. Commit 10273fb in VortexDM adds the Android 10+ MediaStore export used by completed tasks."
       ]
     }
   ]

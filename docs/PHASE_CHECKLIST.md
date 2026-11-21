@@ -31,7 +31,8 @@ A checked item means implementation exists; phase completion requires all accept
 - [x] Firefox webRequest fallback and Ghostery filter engine integration
 - [x] Explicit EasyList/EasyPrivacy-compatible list update and local IndexedDB cache
 - [ ] Filter-list update/cache restore, exception and cosmetic conformance suite
-- [ ] Session-cookie consent and yt-dlp extraction E2E
+- [x] Privacy-safe public-media extraction request (URL/title only; no session cookies collected)
+- [ ] yt-dlp extraction E2E and authenticated media support
 
 ## Phase 4 — Content scripts and batch grabber
 - [x] Closed Shadow DOM UI baseline
