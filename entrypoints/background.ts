@@ -55,6 +55,15 @@ export default defineBackground({
       });
     });
 
+    browser.commands.onCommand.addListener(command=>{
+      void browser.tabs.query({active:true,currentWindow:true}).then(tabs=>{
+        const tab=tabs[0];
+        if(!tab?.id)return;
+        if(command==="vortex-grab-links")void browser.tabs.sendMessage(tab.id,{type:"VORTEX_SCAN_PAGE"});
+        if(command==="vortex-extract-page"&&tab.url)void sendExtract(tab.url,tab.title??"",[]);
+      });
+    });
+
     browser.contextMenus.onClicked.addListener((info,tab)=>{
       if(tab?.id===undefined)return;
       if(info.menuItemId==="vortex-extract-page"&&tab.url) void sendExtract(tab.url,tab.title??"",[]);
