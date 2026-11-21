@@ -52,8 +52,8 @@ export const addBatchChunkPayloadSchema = z.object({
 });
 
 export const taskControlPayloadSchema = z.object({
-  action: z.enum(["pause", "resume", "cancel", "focus_app"]),
-  task_id: z.string().optional()
+  action: z.enum(["pause", "resume", "cancel"]),
+  task_id: z.string().min(1)
 }).strict();
 
 export type IpcEnvelope = z.infer<typeof envelopeSchema>;
