@@ -23,7 +23,10 @@ export default defineContentScript({
     attach();
     if(!document.documentElement)new MutationObserver(attach).observe(document,{childList:true});
     browser.runtime.onMessage.addListener((message:unknown)=>{
-      if(message&&typeof message==="object"&&"type" in message&&message.type==="VORTEX_SCAN_PAGE")void scanAndSend();
+      if(message&&typeof message==="object"&&"type" in message&&message.type==="VORTEX_SCAN_PAGE"){
+        const value=message as {queueId?:unknown};
+        void scanAndSend(typeof value.queueId==="string"?value.queueId:undefined);
+      }
     });
 
     async function applyCosmeticFilters():Promise<void>{
@@ -46,9 +49,9 @@ export default defineContentScript({
       }).observe(document,{childList:true,subtree:true});
     }
 
-    async function scanAndSend():Promise<void>{
+    async function scanAndSend(queueId?:string):Promise<void>{
       const urls=[...document.querySelectorAll<HTMLAnchorElement>("a[href]")].map(anchor=>anchor.href).filter(url=>/^https?:/i.test(url));
-      await browser.runtime.sendMessage({type:"VORTEX_ADD_BATCH",urls:[...new Set(urls)].slice(0,5000),sourcePage:location.href});
+      await browser.runtime.sendMessage({type:"VORTEX_ADD_BATCH",urls:[...new Set(urls)].slice(0,5000),sourcePage:location.href,...(queueId?{queueId}:{})});
     }
   }
 });

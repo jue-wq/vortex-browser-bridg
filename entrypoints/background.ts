@@ -73,7 +73,7 @@ export default defineBackground({
 
     browser.runtime.onMessage.addListener((message:unknown,sender)=>{
       if(!message||typeof message!=="object"||!("type" in message))return;
-      const value=message as {type:string;urls?:unknown;sourcePage?:string;url?:string;cookies?:unknown};
+      const value=message as {type:string;urls?:unknown;sourcePage?:string;url?:string;cookies?:unknown;queueId?:unknown};
       if(value.type==="VORTEX_ENABLE_FULL_FILTERS"){
         return adblock.enableFullLists().then(
           ()=>({success:true}),
@@ -89,10 +89,10 @@ export default defineBackground({
       if(value.type==="VORTEX_ADD_BATCH"&&Array.isArray(value.urls)){
         const urls=value.urls.filter((url):url is string=>typeof url==="string"&&isHttpUrl(url));
         const sourcePage=isHttpUrl(value.sourcePage??"")?value.sourcePage:sender.tab?.url;
-        const candidate=addBatchPayloadSchema.safeParse({items:urls.map(url=>({url})),source_page:sourcePage});
+        const candidate=addBatchPayloadSchema.safeParse({items:urls.map(url=>({url})),source_page:sourcePage,...(typeof value.queueId==="string"&&value.queueId?{queue_id:value.queueId}:{})});
         if(candidate.success) void connection.addBatch(candidate.data).catch(()=>undefined);
       }
-      if(value.type==="VORTEX_ADD_DOWNLOAD"&&value.url) void sendDownload(value.url,sender.tab?.url);
+      if(value.type==="VORTEX_ADD_DOWNLOAD"&&value.url) void sendDownload(value.url,sender.tab?.url,typeof value.queueId==="string"?value.queueId:undefined);
       if(value.type==="VORTEX_EXTRACT_PAGE"&&value.url){
         const rawCookies=Array.isArray(value.cookies)?value.cookies as RawCookie[]:[];
         void sendExtract(value.url,sender.tab?.title??"",rawCookies);
@@ -120,9 +120,9 @@ export default defineBackground({
       }
     }
 
-    async function sendDownload(url:string,page?:string):Promise<void>{
+    async function sendDownload(url:string,page?:string,queueId?:string):Promise<void>{
       if(!isHttpUrl(url))return;
-      const payload=addDownloadPayloadSchema.safeParse({url,headers:{},cookies:[],auto_start:true,...(page&&isHttpUrl(page)?{download_page:page}:{})});
+      const payload=addDownloadPayloadSchema.safeParse({url,headers:{},cookies:[],auto_start:true,...(page&&isHttpUrl(page)?{download_page:page}:{}),...(queueId?{queue_id:queueId}:{})});
       if(payload.success)await connection.request("add_download",payload.data).catch(()=>undefined);
     }
 
