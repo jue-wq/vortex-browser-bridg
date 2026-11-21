@@ -126,7 +126,7 @@ export default defineBackground({
 
     async function sendExtract(url:string,title:string,queueId?:string):Promise<void>{
       if(!isHttpUrl(url))return;
-      const parsed=extractMediaPayloadSchema.safeParse({webpage_url:url,page_title:title,user_agent:navigator.userAgent,cookies:[],playlist_mode:detectYtDlpPage(url).playlist?"playlist":"single",...(queueId?{queue_id:queueId}:{})});
+      const parsed=extractMediaPayloadSchema.safeParse({webpage_url:url,page_title:title,user_agent:navigator.userAgent,playlist_mode:detectYtDlpPage(url).playlist?"playlist":"single",...(queueId?{queue_id:queueId}:{})});
       if(parsed.success)await connection.request("extract_media",parsed.data).catch(()=>undefined);
     }
 

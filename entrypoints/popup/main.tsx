@@ -39,7 +39,7 @@ function Popup(){
   },[]);
   const extract=async()=>{
     if(!page||!isHttpUrl(page)||!ytdlpReady)return;
-    await browser.runtime.sendMessage({type:"VORTEX_EXTRACT_PAGE",url:page,cookies:[],queueId:queueId||undefined});
+    await browser.runtime.sendMessage({type:"VORTEX_EXTRACT_PAGE",url:page,queueId:queueId||undefined});
   };
   const grab=async()=>browser.tabs.query({active:true,currentWindow:true}).then(tabs=>{
     const id=tabs[0]?.id;if(id!==undefined)return browser.tabs.sendMessage(id,{type:"VORTEX_SCAN_PAGE",queueId:queueId||undefined});

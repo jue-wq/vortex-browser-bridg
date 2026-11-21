@@ -6,10 +6,10 @@ export default defineConfig({
   manifest: ({ browser, manifestVersion }) => {
     const firefoxAndroid = browser === "firefox" && manifestVersion === 2;
     const permissions = firefoxAndroid
-      ? ["storage", "tabs", "contextMenus", "webRequest", "webRequestBlocking", "cookies", "webNavigation", "<all_urls>"]
+      ? ["storage", "tabs", "contextMenus", "webRequest", "webRequestBlocking", "webNavigation", "<all_urls>"]
       : browser === "firefox"
-        ? ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "webRequestBlocking", "cookies", "webNavigation"]
-        : ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "cookies", "declarativeNetRequest"];
+        ? ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "webRequestBlocking", "webNavigation"]
+        : ["downloads", "nativeMessaging", "storage", "contextMenus", "tabs", "webRequest", "declarativeNetRequest"];
     return {
       name: "Vortex Browser Bridge",
       description: "Local-first download capture and privacy filtering for VortexDM.",

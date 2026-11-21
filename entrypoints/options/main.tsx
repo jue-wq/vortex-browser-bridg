@@ -12,14 +12,13 @@ function Options(){
   const [includedMimeTypes,setIncludedMimeTypes]=useState("");
   const [incognitoAllowed,setIncognitoAllowed]=useState(false);
   const [adblockEnabled,setAdblockEnabled]=useState(true);
-  const [cookiePolicy,setCookiePolicy]=useState("ask");
   const [customRules,setCustomRules]=useState("");
   const [mobilePort,setMobilePort]=useState("17321");
   const [mobileKey,setMobileKey]=useState("");
   const [fullListsEnabled,setFullListsEnabled]=useState(false);
   const [updatingLists,setUpdatingLists]=useState(false);
   useEffect(()=>{
-    void browser.storage.local.get(["captureEnabled","captureMinSizeBytes","captureExcludedDomains","captureAllowedDomains","captureIncludedExtensions","captureIncludedMimeTypes","captureIncognitoAllowed","vortexAdblockEnabled","cookiePolicy","vortexCustomFilterRules","mobileBridgePort","mobileBridgeApiKey","vortexFullFilterListsEnabled"]).then(saved=>{
+    void browser.storage.local.get(["captureEnabled","captureMinSizeBytes","captureExcludedDomains","captureAllowedDomains","captureIncludedExtensions","captureIncludedMimeTypes","captureIncognitoAllowed","vortexAdblockEnabled","vortexCustomFilterRules","mobileBridgePort","mobileBridgeApiKey","vortexFullFilterListsEnabled"]).then(saved=>{
       setCaptureEnabled(saved.captureEnabled!==false);
       setMinSizeMb(String(Number(saved.captureMinSizeBytes??0)/1048576));
       setExcludedDomains(Array.isArray(saved.captureExcludedDomains)?saved.captureExcludedDomains.join(", "):"");
@@ -89,7 +88,7 @@ function Options(){
         <label class="stack">Custom filter rules<textarea rows={8} value={customRules} onInput={event=>setCustomRules(event.currentTarget.value)} placeholder={"||ads.example^\n@@||trusted.example^\n##.sponsored"} /></label>
         <p>Custom rules use ABP/uBO-like syntax. Unsupported advanced syntax is ignored by the built-in Chromium-compatible subset.</p>
       </article>}
-      <article><h3>Media & privacy</h3><label>Cookie transfer policy <select value={cookiePolicy} onChange={event=>setCookiePolicy(event.currentTarget.value)}><option value="ask">Ask every time</option><option value="media">Media sites only</option><option value="never">Never</option></select></label><p>Cookies are read only after a user action and are not written to extension storage.</p></article>
+
       <article><h3>Android local bridge</h3><p>Firefox for Android has no Native Messaging API. Configure this only after enabling the VortexDM app's loopback server. It must listen on 127.0.0.1 only.</p><label class="stack">Local port<input value={mobilePort} onInput={event=>setMobilePort(event.currentTarget.value)} /></label><label class="stack">One-time API key<input type="password" value={mobileKey} onInput={event=>setMobileKey(event.currentTarget.value)} placeholder="At least 32 random characters" /></label></article>
       <button onClick={()=>void save()}>Save settings</button>
     </section>
