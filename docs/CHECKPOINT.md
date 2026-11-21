@@ -6,6 +6,7 @@
 - Transport: Native Messaging on desktop; Android localhost transport settings only. Android app-side HTTP server is not implemented yet.
 - CI evidence: run 44953304877 completed successfully: npm install, WXT prepare/typecheck, 12 Vitest cases, Chrome MV3 build, Firefox desktop MV3 build, Firefox Android MV2 build; protocol sync comparison passed.
 - Outstanding Phase 1 acceptance: mock Native Messaging host handshake, timeout and 2 MiB chunk round-trip E2E.
-- No phase is marked DONE.
+- Branding: user-supplied VortexDM artwork is installed as `public/icon-32.png` and referenced by the WebExtension manifest and toolbar action.
+- Icon commit `4fd04a3` CI is queued; no phase is marked DONE.
 - Resume: read progress.json; run npm run check; run npm run build:chrome, npm run build:firefox and npm run build:firefox:android; implement and test mock-host round trips; record the next CI URL/SHA.
 - Next task: finish mock-host transport E2E, then expand download interception rule matrix and test the safe fallback.

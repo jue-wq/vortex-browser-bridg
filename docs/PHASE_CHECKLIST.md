@@ -37,6 +37,7 @@ A checked item means implementation exists; phase completion requires all accept
 - [ ] 150+ link chunked transfer and hostile-CSS E2E
 
 ## Phase 5 — Popup, settings and store release
+- [x] User-approved VortexDM icon configured for extension manifest and toolbar action
 - [x] Preact popup/options shells
 - [x] User filter toggle and custom filter editor
 - [x] Android Firefox MV2 build target and loopback bridge settings shell
