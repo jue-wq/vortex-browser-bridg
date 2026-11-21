@@ -32,7 +32,6 @@ export const extractMediaPayloadSchema = z.object({
   webpage_url: z.string().url(),
   page_title: z.string(),
   user_agent: z.string(),
-  cookies: z.array(cookieSchema),
   playlist_mode: z.enum(["single", "playlist", "ask"]),
   queue_id: z.string().optional()
 }).strict();
