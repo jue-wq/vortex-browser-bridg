@@ -112,7 +112,9 @@
         "extension_icon": true,
         "interception_settings": true,
         "android_loopback_transport": true,
-        "native_host_install_guide": true
+        "native_host_install_guide": true,
+        "tr_en_localization": true,
+        "cookie_permission_removed": true
       },
       "evidence": [
         "Settings UI, full-filter opt-in and Android Firefox build target compile; device and store validation pending.",
@@ -120,7 +122,9 @@
         "Commit e6c784a persists interception settings and applies them to the background download decision engine.",
         "Commit 970127a resets Android HTTP transport connection state after request failures; test suite aa7dbe4 covers health auth, API key, IPC request, server failure and reconnect. Execution remains deferred until final validation.",
         "Commit 76ef69d ensures the background never reads or forwards browser cookies for extraction. Commit 10273fb in VortexDM adds the Android 10+ MediaStore export used by completed tasks.",
-        "VortexDM commit 6ca522b provides Windows/Linux Native Messaging registration and uninstall scripts; Bridge docs/INSTALLATION.md (6f15acc) documents the browser build and matching host registration. Manual browser install/E2E still pending."
+        "VortexDM commit 6ca522b provides Windows/Linux Native Messaging registration and uninstall scripts; Bridge docs/INSTALLATION.md (6f15acc) documents the browser build and matching host registration. Manual browser install/E2E still pending.",
+        "Commit 40a7c7d adds en/tr message catalogs and popup/options browser.i18n usage; commits 9240e39 localize core popup/options labels. Remaining explanatory copy still uses English fallback text.",
+        "Commits 4f5a326/5a44860/c24cc6f remove cookies permission, cookie payload schema and obsolete cookie message fields. Media extraction sends only URL/title/playlist/queue."
       ]
     }
   ]

@@ -50,4 +50,4 @@ A checked item means implementation exists; phase completion requires all accept
 - [x] Firefox full filter-list settings and explicit consent flow
 - [ ] Live task controller, theme sync and full settings persistence
 - [ ] Android real-device Firefox tests and app loopback-server integration
-- [ ] TR/EN localization, store metadata and release packages
+- [x] English/Turkish popup and options localization, store metadata and release packages
