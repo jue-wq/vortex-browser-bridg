@@ -1,5 +1,4 @@
 import { browser } from "wxt/browser";
-import { defineBackground } from "wxt/sandbox";
 import { ConnectionManager } from "../src/transport/ConnectionManager";
 import { addBatchPayloadSchema, addDownloadPayloadSchema, extractMediaPayloadSchema } from "../src/protocol/schema";
 import { decideCapture, defaultInterceptionSettings } from "../src/background/RuleEngine";
