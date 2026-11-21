@@ -27,10 +27,6 @@ const RESOURCE_TYPES: Record<string,ResourceType> = {
 function domainMatches(host:string,ruleHost:string):boolean {
   return host===ruleHost || host.endsWith("."+ruleHost);
 }
-function siteKey(host:string):string {
-  const labels=host.toLowerCase().split(".").filter(Boolean);
-  return labels.length<2?host.toLowerCase():labels.slice(-2).join(".");
-}
 function cleanSelector(selector:string):string|null {
   const value=selector.trim();
   if(!value||value.length>500||/[{}<>;]/.test(value))return null;
@@ -112,7 +108,7 @@ export class FilterEngine {
       if(rule.thirdParty!==undefined){
         if(!sourceHost)return false;
         const targetHost=target.hostname.toLowerCase();
-        const sameSite=siteKey(sourceHost)===siteKey(targetHost);
+        const sameSite=domainMatches(sourceHost,targetHost)||domainMatches(targetHost,sourceHost);
         if(sameSite===rule.thirdParty)return false;
       }
       if(rule.domains.length&&(!sourceHost||!rule.domains.some(domain=>domainMatches(sourceHost,domain))))return false;

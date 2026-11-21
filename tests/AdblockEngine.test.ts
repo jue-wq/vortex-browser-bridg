@@ -19,9 +19,10 @@ describe("local adblock filter engine",()=>{
   it("treats parent and child subdomains as same-site for party modifiers",()=>{
     const thirdParty=new FilterEngine(["||tracker.example^$third-party"]);
     const firstParty=new FilterEngine(["||tracker.example^$~third-party"]);
-    expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(false);
+    expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.tracker.example"})).toBe(false);
     expect(firstParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(true);
     expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://publisher.test"})).toBe(true);
+    expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(true);
     expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel"})).toBe(false);
   });
   it("returns cosmetic selectors for matching hosts and applies exceptions",()=>{
