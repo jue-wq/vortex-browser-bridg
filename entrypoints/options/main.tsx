@@ -40,7 +40,7 @@ function Options(){
     if(!Number.isInteger(port)||port<1||port>65535)return;
     const minMb=Number(minSizeMb);
     if(!Number.isFinite(minMb)||minMb<0||minMb>1048576)return;
-    const splitValues=(value:string)=>value.split(/[\\s,;]+/).map(item=>item.trim()).filter(Boolean);
+    const splitValues=(value:string)=>value.split(/[\s,;]+/).map(item=>item.trim()).filter(Boolean);
     await browser.storage.local.set({
       captureEnabled,captureMinSizeBytes:Math.floor(minMb*1048576),
       captureExcludedDomains:splitValues(excludedDomains),captureAllowedDomains:splitValues(allowedDomains),
