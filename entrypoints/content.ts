@@ -9,14 +9,14 @@ export default defineContentScript({
     host.id="vortexdm-shadow-host";
     const shadow=host.attachShadow({mode:"closed"});
     const style=document.createElement("style");
-    style.textContent=\`:host{all:initial}.pill{position:fixed;z-index:2147483647;right:20px;bottom:20px;background:#181D28;color:#E6EDF5;border:1px solid #4F8CFF;border-radius:18px;padding:9px 14px;font:13px sans-serif;box-shadow:0 4px 20px #0008;cursor:pointer}\`;
+    style.textContent=":host{all:initial}.pill{position:fixed;z-index:2147483647;right:20px;bottom:20px;background:#181D28;color:#E6EDF5;border:1px solid #4F8CFF;border-radius:18px;padding:9px 14px;font:13px sans-serif;box-shadow:0 4px 20px #0008;cursor:pointer}";
     const button=document.createElement("button");
     button.className="pill";button.textContent="Grab page links";
     button.addEventListener("click",()=>void scanAndSend());
     shadow.append(style,button);
     const attach=()=>{if(document.documentElement&&!host.isConnected)document.documentElement.append(host);};
     attach();
-    if(!document.documentElement){new MutationObserver(attach).observe(document,{childList:true});}
+    if(!document.documentElement)new MutationObserver(attach).observe(document,{childList:true});
     browser.runtime.onMessage.addListener((message:unknown)=>{
       if(message&&typeof message==="object"&&"type" in message&&message.type==="VORTEX_SCAN_PAGE")void scanAndSend();
     });
@@ -34,7 +34,7 @@ export default defineContentScript({
       if(target)target.append(element);
       else new MutationObserver(()=>{
         const readyTarget=document.head??document.documentElement;
-        if(readyTarget){readyTarget.append(element);}
+        if(readyTarget)readyTarget.append(element);
       }).observe(document,{childList:true,subtree:true});
     }
 
