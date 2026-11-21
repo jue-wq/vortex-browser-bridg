@@ -105,7 +105,7 @@ export class FilterEngine {
       if(rule.path&&!target.pathname.startsWith(rule.path))return false;
       if(rule.types.length&&context.type&&!rule.types.includes(context.type as ResourceType))return false;
       if(rule.types.length&&!context.type)return false;
-      if(rule.thirdParty!==undefined&&sourceHost&&(sourceHost===target.hostname)===rule.thirdParty)return false;
+      if(rule.thirdParty!==undefined){\n        if(!sourceHost)return false;\n        const targetHost=target.hostname.toLowerCase();\n        const sameSite=domainMatches(sourceHost,targetHost)||domainMatches(targetHost,sourceHost);\n        if(sameSite===rule.thirdParty)return false;\n      }
       if(rule.domains.length&&(!sourceHost||!rule.domains.some(domain=>domainMatches(sourceHost,domain))))return false;
       if(rule.excludedDomains.some(domain=>sourceHost&&domainMatches(sourceHost,domain)))return false;
       return true;

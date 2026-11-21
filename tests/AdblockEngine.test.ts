@@ -16,7 +16,7 @@ describe("local adblock filter engine",()=>{
     expect(engine.shouldBlock({url:"https://ads.example/a.png",initiator:"https://publisher.example",type:"image"})).toBe(false);
     expect(engine.shouldBlock({url:"https://ads.example/a.js",initiator:"https://other.example",type:"script"})).toBe(false);
   });
-  it("returns cosmetic selectors for matching hosts and applies exceptions",()=>{
+  it("treats parent and child subdomains as same-site for party modifiers",()=>{\n    const thirdParty=new FilterEngine(["||tracker.example^$third-party"]);\n    const firstParty=new FilterEngine(["||tracker.example^$~third-party"]);\n    expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(false);\n    expect(firstParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(true);\n    expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://publisher.test"})).toBe(true);\n    expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel"})).toBe(false);\n  });\n  it("returns cosmetic selectors for matching hosts and applies exceptions",()=>{
     const engine=new FilterEngine(["##.ad-slot","publisher.example##.sponsor","publisher.example#@#.sponsor"]);
     expect(engine.getCosmeticSelectors("publisher.example")).toEqual([".ad-slot"]);
     expect(engine.getCosmeticSelectors("elsewhere.example")).toEqual([".ad-slot"]);
