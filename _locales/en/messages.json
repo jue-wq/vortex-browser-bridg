@@ -79,5 +79,110 @@
   },
   "saveSettings": {
     "message": "Save settings"
+  },
+  "detectedMedia": {
+    "message": "Detected media"
+  },
+  "originalUbo": {
+    "message": "Original uBlock Origin"
+  },
+  "privacyEnabled": {
+    "message": "Privacy protection enabled"
+  },
+  "uboDescription": {
+    "message": "Install the original Raymond Hill extension from Firefox Add-ons. Bridge filtering is disabled on Android."
+  },
+  "desktopPrivacy": {
+    "message": "Ad and tracker rules run locally in this browser."
+  },
+  "getUbo": {
+    "message": "Get uBlock Origin"
+  },
+  "queue": {
+    "message": "Queue"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "footer": {
+    "message": "Local-first · No analytics · Vortex Browser Bridge 0.2.0"
+  },
+  "optionsTitle": {
+    "message": "Settings"
+  },
+  "connection": {
+    "message": "Connection"
+  },
+  "interceptionRules": {
+    "message": "Interception Rules"
+  },
+  "privacyFilters": {
+    "message": "Privacy & Filters"
+  },
+  "mediaYtdlp": {
+    "message": "Media & yt-dlp"
+  },
+  "interface": {
+    "message": "Interface"
+  },
+  "downloadInterception": {
+    "message": "Download interception"
+  },
+  "captureDownloads": {
+    "message": "Capture browser downloads"
+  },
+  "allowedDomainsLabel": {
+    "message": "Allowed domains (leave empty for all)"
+  },
+  "fileExtensionsLabel": {
+    "message": "File extensions"
+  },
+  "mimeTypesLabel": {
+    "message": "MIME types"
+  },
+  "privateWindows": {
+    "message": "Allow capture in private windows"
+  },
+  "ackTimeout": {
+    "message": "Browser downloads continue unless VortexDM acknowledges within 1.5 seconds."
+  },
+  "privacyFilteringText": {
+    "message": "Local rules run in the browser. Chromium MV3 uses DNR-compatible rules; Firefox desktop supports full filter-list processing."
+  },
+  "fullListsEnabled": {
+    "message": "Full filter lists enabled"
+  },
+  "builtInRules": {
+    "message": "Using built-in local rules"
+  },
+  "updating": {
+    "message": "Updating…"
+  },
+  "updateLists": {
+    "message": "Update EasyList/EasyPrivacy lists"
+  },
+  "enableLists": {
+    "message": "Enable full filter lists"
+  },
+  "builtInOnly": {
+    "message": "Use built-in rules only"
+  },
+  "filterPrivacy": {
+    "message": "Filter subscriptions are public and compiled rules are cached locally. No browsing history or page URLs are uploaded."
+  },
+  "customRules": {
+    "message": "Custom filter rules"
+  },
+  "customRulesHelp": {
+    "message": "Custom rules use ABP/uBO-like syntax. Unsupported advanced syntax is ignored by the built-in Chromium-compatible subset."
+  },
+  "androidBridgeHelp": {
+    "message": "Firefox for Android has no Native Messaging API. Enable the VortexDM app loopback server first. It must listen on 127.0.0.1 only."
+  },
+  "apiKeyHelp": {
+    "message": "At least 32 random characters"
+  },
+  "settingsSaved": {
+    "message": "Settings saved."
   }
 }

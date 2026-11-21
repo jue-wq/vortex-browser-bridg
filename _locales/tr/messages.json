@@ -79,5 +79,110 @@
   },
   "saveSettings": {
     "message": "Ayarları kaydet"
+  },
+  "detectedMedia": {
+    "message": "Algılanan medya"
+  },
+  "originalUbo": {
+    "message": "Orijinal uBlock Origin"
+  },
+  "privacyEnabled": {
+    "message": "Gizlilik koruması etkin"
+  },
+  "uboDescription": {
+    "message": "Firefox Eklentileri'nden Raymond Hill'in orijinal eklentisini yükleyin. Bridge'in filtrelemesi Android'de kapalıdır."
+  },
+  "desktopPrivacy": {
+    "message": "Reklam ve izleyici kuralları bu tarayıcıda yerel olarak çalışır."
+  },
+  "getUbo": {
+    "message": "uBlock Origin'i edin"
+  },
+  "queue": {
+    "message": "Kuyruk"
+  },
+  "settings": {
+    "message": "Ayarlar"
+  },
+  "footer": {
+    "message": "Önce yerel · Analitik yok · Vortex Browser Bridge 0.2.0"
+  },
+  "optionsTitle": {
+    "message": "Ayarlar"
+  },
+  "connection": {
+    "message": "Bağlantı"
+  },
+  "interceptionRules": {
+    "message": "Yakalama kuralları"
+  },
+  "privacyFilters": {
+    "message": "Gizlilik ve filtreler"
+  },
+  "mediaYtdlp": {
+    "message": "Medya ve yt-dlp"
+  },
+  "interface": {
+    "message": "Arayüz"
+  },
+  "downloadInterception": {
+    "message": "İndirme yakalama"
+  },
+  "captureDownloads": {
+    "message": "Tarayıcı indirmelerini yakala"
+  },
+  "allowedDomainsLabel": {
+    "message": "İzin verilen alan adları (tümü için boş bırakın)"
+  },
+  "fileExtensionsLabel": {
+    "message": "Dosya uzantıları"
+  },
+  "mimeTypesLabel": {
+    "message": "MIME türleri"
+  },
+  "privateWindows": {
+    "message": "Gizli pencerelerde yakalamaya izin ver"
+  },
+  "ackTimeout": {
+    "message": "VortexDM 1,5 saniye içinde onaylamazsa tarayıcı indirmesi devam eder."
+  },
+  "privacyFilteringText": {
+    "message": "Yerel kurallar tarayıcıda çalışır. Chromium MV3 DNR uyumlu kuralları, Firefox masaüstü ise tam filtre listesi işlemeyi kullanır."
+  },
+  "fullListsEnabled": {
+    "message": "Tam filtre listeleri etkin"
+  },
+  "builtInRules": {
+    "message": "Yerleşik yerel kurallar kullanılıyor"
+  },
+  "updating": {
+    "message": "Güncelleniyor…"
+  },
+  "updateLists": {
+    "message": "EasyList/EasyPrivacy listelerini güncelle"
+  },
+  "enableLists": {
+    "message": "Tam filtre listelerini etkinleştir"
+  },
+  "builtInOnly": {
+    "message": "Yalnızca yerleşik kuralları kullan"
+  },
+  "filterPrivacy": {
+    "message": "Filtre abonelikleri herkese açıktır ve derlenmiş kurallar yerel olarak saklanır. Tarama geçmişi veya sayfa adresleri yüklenmez."
+  },
+  "customRules": {
+    "message": "Özel filtre kuralları"
+  },
+  "customRulesHelp": {
+    "message": "Özel kurallar ABP/uBO benzeri sözdizimi kullanır. Desteklenmeyen gelişmiş sözdizimi yerleşik Chromium alt kümesinde yok sayılır."
+  },
+  "androidBridgeHelp": {
+    "message": "Firefox Android'de Native Messaging API yoktur. Önce VortexDM uygulamasının yerel sunucusunu açın. Sunucu yalnızca 127.0.0.1 üzerinde dinlemelidir."
+  },
+  "apiKeyHelp": {
+    "message": "En az 32 rastgele karakter"
+  },
+  "settingsSaved": {
+    "message": "Ayarlar kaydedildi."
   }
 }
