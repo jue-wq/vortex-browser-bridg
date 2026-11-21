@@ -72,7 +72,7 @@ export default defineBackground({
 
     browser.runtime.onMessage.addListener((message:unknown,sender)=>{
       if(!message||typeof message!=="object"||!("type" in message))return;
-      const value=message as {type:string;urls?:unknown;sourcePage?:string;url?:string;cookies?:unknown;queueId?:unknown};
+      const value=message as {type:string;urls?:unknown;sourcePage?:string;url?:string;queueId?:unknown};
       if(value.type==="VORTEX_ENABLE_FULL_FILTERS"){
         return adblock.enableFullLists().then(
           ()=>({success:true}),
