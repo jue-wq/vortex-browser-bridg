@@ -20,7 +20,7 @@ describe("local adblock filter engine",()=>{
     const thirdParty=new FilterEngine(["||tracker.example^$third-party"]);
     const firstParty=new FilterEngine(["||tracker.example^$~third-party"]);
     expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.tracker.example"})).toBe(false);
-    expect(firstParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(true);
+    expect(firstParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.tracker.example"})).toBe(true);
     expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://publisher.test"})).toBe(true);
     expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel",initiator:"https://shop.example"})).toBe(true);
     expect(thirdParty.shouldBlock({url:"https://tracker.example/pixel"})).toBe(false);
