@@ -16,7 +16,8 @@ export default defineConfig({
       version: "0.2.0",
       permissions,
       ...(manifestVersion === 3 ? { host_permissions: ["<all_urls>"] } : {}),
-      action: { default_title: "VortexDM" },
+      icons: { 32: "/icon-32.png" },
+      action: { default_title: "VortexDM", default_icon: { 32: "/icon-32.png" } },
       browser_specific_settings: {
         gecko: { id: "vortex-browser-bridge@vortexdm.local", strict_min_version: "121.0" }
       }
