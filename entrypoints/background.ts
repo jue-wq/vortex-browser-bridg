@@ -7,7 +7,6 @@ import { detectYtDlpPage } from "../src/background/YtDlpDetector";
 import { AdblockController } from "../src/adblock/AdblockController";
 
 type DownloadSnapshot = {id:number;url:string;filename:string;totalBytes:number;incognito:boolean;referrer?:string};
-type RawCookie = {name?:unknown;value?:unknown;domain?:unknown;path?:unknown;secure?:unknown;httpOnly?:unknown;expirationDate?:unknown};
 const connection = new ConnectionManager();
 const settings = {...defaultInterceptionSettings};
 const interceptionKeys = ["captureEnabled","captureMinSizeBytes","captureExcludedDomains","captureAllowedDomains","captureIncludedExtensions","captureIncludedMimeTypes","captureIncognitoAllowed"];
@@ -60,13 +59,13 @@ export default defineBackground({
         const tab=tabs[0];
         if(!tab?.id)return;
         if(command==="vortex-grab-links")void browser.tabs.sendMessage(tab.id,{type:"VORTEX_SCAN_PAGE"});
-        if(command==="vortex-extract-page"&&tab.url)void sendExtract(tab.url,tab.title??"",[]);
+        if(command==="vortex-extract-page"&&tab.url)void sendExtract(tab.url,tab.title??"");
       });
     });
 
     browser.contextMenus.onClicked.addListener((info,tab)=>{
       if(tab?.id===undefined)return;
-      if(info.menuItemId==="vortex-extract-page"&&tab.url) void sendExtract(tab.url,tab.title??"",[]);
+      if(info.menuItemId==="vortex-extract-page"&&tab.url) void sendExtract(tab.url,tab.title??"");
       if(info.menuItemId==="vortex-grab-links") void browser.tabs.sendMessage(tab.id,{type:"VORTEX_SCAN_PAGE"});
       if(info.menuItemId==="vortex-download-link"&&info.linkUrl) void sendDownload(info.linkUrl,tab.url);
     });
@@ -94,8 +93,7 @@ export default defineBackground({
       }
       if(value.type==="VORTEX_ADD_DOWNLOAD"&&value.url) void sendDownload(value.url,sender.tab?.url,typeof value.queueId==="string"?value.queueId:undefined);
       if(value.type==="VORTEX_EXTRACT_PAGE"&&value.url){
-        const rawCookies=Array.isArray(value.cookies)?value.cookies as RawCookie[]:[];
-        void sendExtract(value.url,sender.tab?.title??"",rawCookies,typeof value.queueId==="string"?value.queueId:undefined);
+        void sendExtract(value.url,sender.tab?.title??"",typeof value.queueId==="string"?value.queueId:undefined);
       }
     });
 
@@ -126,13 +124,9 @@ export default defineBackground({
       if(payload.success)await connection.request("add_download",payload.data).catch(()=>undefined);
     }
 
-    async function sendExtract(url:string,title:string,rawCookies:RawCookie[],queueId?:string):Promise<void>{
+    async function sendExtract(url:string,title:string,queueId?:string):Promise<void>{
       if(!isHttpUrl(url))return;
-      const cookies=rawCookies.flatMap(cookie=>{
-        if(typeof cookie.name!=="string"||typeof cookie.value!=="string"||typeof cookie.domain!=="string")return [];
-        return [{name:cookie.name,value:cookie.value,domain:cookie.domain,path:typeof cookie.path==="string"?cookie.path:"/",secure:cookie.secure===true,http_only:cookie.httpOnly===true,...(typeof cookie.expirationDate==="number"?{expires:cookie.expirationDate}:{})}];
-      });
-      const parsed=extractMediaPayloadSchema.safeParse({webpage_url:url,page_title:title,user_agent:navigator.userAgent,cookies,playlist_mode:detectYtDlpPage(url).playlist?"playlist":"single",...(queueId?{queue_id:queueId}:{})});
+      const parsed=extractMediaPayloadSchema.safeParse({webpage_url:url,page_title:title,user_agent:navigator.userAgent,cookies:[],playlist_mode:detectYtDlpPage(url).playlist?"playlist":"single",...(queueId?{queue_id:queueId}:{})});
       if(parsed.success)await connection.request("extract_media",parsed.data).catch(()=>undefined);
     }
 
