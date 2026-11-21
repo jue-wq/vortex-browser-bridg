@@ -105,14 +105,14 @@ export class AdblockController {
 
   private attachGhosteryBlocker(): void {
     if (!this.blocker || this.fullListsActive || !this.enabled) return;
-    this.blocker.enableBlockingInBrowser(browser as Parameters<WebExtensionBlocker["enableBlockingInBrowser"]>[0]);
+    this.blocker.enableBlockingInBrowser(browser as unknown as Parameters<WebExtensionBlocker["enableBlockingInBrowser"]>[0]);
     this.fullListsActive = true;
   }
 
   private detachGhosteryBlocker(): void {
     if (!this.blocker || !this.fullListsActive) return;
     try {
-      this.blocker.disableBlockingInBrowser(browser as Parameters<WebExtensionBlocker["disableBlockingInBrowser"]>[0]);
+      this.blocker.disableBlockingInBrowser(browser as unknown as Parameters<WebExtensionBlocker["disableBlockingInBrowser"]>[0]);
     } catch {
       // The browser context may already have been torn down by the extension host.
     }
