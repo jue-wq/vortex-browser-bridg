@@ -7,7 +7,7 @@ vi.mock("wxt/browser",()=>({browser:{runtime:{getPlatformInfo:vi.fn(async()=>({o
 class MockTransport implements ITransport {
   connected=false;
   readonly sent: unknown[]=[];
-  responseMode:"ok"|"mismatch"|"error"="ok";
+  responseMode:"ok"|"mismatch"|"error"|"rejected"="ok";
   async connect():Promise<void>{this.connected=true;}
   async send(message:unknown):Promise<unknown>{
     this.sent.push(message);
@@ -17,7 +17,7 @@ class MockTransport implements ITransport {
       type:this.responseMode==="error"?"error":"ack",
       request_id:this.responseMode==="mismatch"?"wrong-id":request.request_id,
       timestamp:1,
-      payload:this.responseMode==="error"?{code:"mock_error",message:"rejected"}:{accepted:true}
+      payload:this.responseMode==="error"?{code:"mock_error",message:"rejected"}:this.responseMode==="rejected"?{accepted:false,code:"not_implemented",message:"service unavailable"}:{accepted:true}
     };
   }
   disconnect():void{this.connected=false;}
@@ -54,6 +54,10 @@ describe("ConnectionManager mock-host contract",()=>{
       expect(envelope.type).toBe("add_batch_chunk");
       expect(envelope.payload.chunk_total).toBe(transport.sent.length);
     }
+  });
+  it("rejects an ACK that explicitly reports accepted=false",async()=>{
+    transport.responseMode="rejected";
+    await expect(manager.request("extract_media",{webpage_url:"https://example.com",page_title:"",user_agent:"",cookies:[],playlist_mode:"single"})).rejects.toThrow("service unavailable");
   });
   it("does not silently accept a missing transport ACK",async()=>{
     const broken: ITransport={connected:true,connect:async()=>{},disconnect:()=>{},send:async()=>undefined};
