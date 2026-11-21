@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "Vortex Browser Bridge",
-  "current_phase": 4,
+  "current_phase": 5,
   "targets": [
     "chromium-desktop-mv3",
     "firefox-desktop-mv3",
@@ -107,12 +107,14 @@
         "android_real_device_e2e": false,
         "release_packages": false,
         "extension_icon": true,
-        "interception_settings": true
+        "interception_settings": true,
+        "android_loopback_transport": true
       },
       "evidence": [
         "Settings UI, full-filter opt-in and Android Firefox build target compile; device and store validation pending.",
         "User-supplied VortexDM artwork configured as WebExtension manifest and toolbar action icon; commit 4fd04a3.",
-        "Commit e6c784a persists interception settings and applies them to the background download decision engine."
+        "Commit e6c784a persists interception settings and applies them to the background download decision engine.",
+        "Commit 970127a resets Android HTTP transport connection state after request failures; test suite aa7dbe4 covers health auth, API key, IPC request, server failure and reconnect. Execution remains deferred until final validation."
       ]
     }
   ]
