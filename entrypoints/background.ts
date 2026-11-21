@@ -10,13 +10,25 @@ type DownloadSnapshot = {id:number;url:string;filename:string;totalBytes:number;
 type RawCookie = {name?:unknown;value?:unknown;domain?:unknown;path?:unknown;secure?:unknown;httpOnly?:unknown;expirationDate?:unknown};
 const connection = new ConnectionManager();
 const settings = {...defaultInterceptionSettings};
+const interceptionKeys = ["captureEnabled","captureMinSizeBytes","captureExcludedDomains","captureAllowedDomains","captureIncludedExtensions","captureIncludedMimeTypes","captureIncognitoAllowed"];
+function applyInterceptionSettings(saved:Record<string,unknown>):void {
+  settings.enabled = saved.captureEnabled !== false;
+  settings.minSizeBytes = typeof saved.captureMinSizeBytes === "number" && Number.isFinite(saved.captureMinSizeBytes) && saved.captureMinSizeBytes >= 0 ? saved.captureMinSizeBytes : 0;
+  settings.excludedDomains = Array.isArray(saved.captureExcludedDomains) ? saved.captureExcludedDomains.filter((item):item is string=>typeof item==="string") : [];
+  settings.allowedDomains = Array.isArray(saved.captureAllowedDomains) ? saved.captureAllowedDomains.filter((item):item is string=>typeof item==="string") : [];
+  settings.includedExtensions = Array.isArray(saved.captureIncludedExtensions) ? saved.captureIncludedExtensions.filter((item):item is string=>typeof item==="string") : [];
+  settings.includedMimeTypes = Array.isArray(saved.captureIncludedMimeTypes) ? saved.captureIncludedMimeTypes.filter((item):item is string=>typeof item==="string") : [];
+  settings.incognitoAllowed = saved.captureIncognitoAllowed === true;
+}
 const adblock = new AdblockController();
 
 export default defineBackground({
   persistent:false,
   main() {
     void adblock.start().catch(()=>undefined);
+    void browser.storage.local.get(interceptionKeys).then(saved=>applyInterceptionSettings(saved));
     browser.storage.onChanged.addListener((changes,area)=>{
+      if(area==="local" && interceptionKeys.some(key=>key in changes)) void browser.storage.local.get(interceptionKeys).then(saved=>applyInterceptionSettings(saved));
       if(area==="local" && (changes.vortexAdblockEnabled || changes.vortexCustomFilterRules)) void adblock.refresh().catch(()=>undefined);
     });
     browser.runtime.onInstalled.addListener(() => {
@@ -79,8 +91,7 @@ export default defineBackground({
     });
 
     async function interceptDownload(item:DownloadSnapshot):Promise<void>{
-      const stored=await browser.storage.local.get("captureEnabled");
-      if(stored.captureEnabled===false)return;
+      if(!settings.enabled)return;
       const decision=decideCapture({url:item.url,filename:item.filename,totalBytes:item.totalBytes,incognito:item.incognito},settings);
       if(!decision.capture||!item.url)return;
       const candidate=addDownloadPayloadSchema.safeParse({
