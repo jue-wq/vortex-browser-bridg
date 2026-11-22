@@ -51,7 +51,7 @@ export const addBatchChunkPayloadSchema = z.object({
   if (value.chunk_index >= value.chunk_total) ctx.addIssue({code:z.ZodIssueCode.custom,path:["chunk_index"],message:"chunk_index must be below chunk_total"});
 });
 
-export const taskControlPayloadSchema = z.object({
+export const taskStatusPayloadSchema = z.object({\n  limit: z.number().int().min(1).max(50).optional()\n}).strict();\n\nexport const taskControlPayloadSchema = z.object({
   action: z.enum(["pause", "resume", "cancel"]),
   task_id: z.string().min(1)
 }).strict();
@@ -59,7 +59,7 @@ export const taskControlPayloadSchema = z.object({
 export type IpcEnvelope = z.infer<typeof envelopeSchema>;
 export type AddDownloadPayload = z.infer<typeof addDownloadPayloadSchema>;
 export type AddBatchPayload = z.infer<typeof addBatchPayloadSchema>;
-export type OutgoingMessageType = "handshake" | "add_download" | "extract_media" | "add_batch" | "add_batch_chunk" | "task_control";
+export type OutgoingMessageType = "handshake" | "add_download" | "extract_media" | "add_batch" | "add_batch_chunk" | "task_control" | "task_status";
 
 export function validateEnvelope(input: unknown): IpcEnvelope {
   return envelopeSchema.parse(input);
