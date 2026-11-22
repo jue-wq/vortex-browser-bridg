@@ -63,7 +63,7 @@ export class AdblockController {
   async enableFullLists(): Promise<void> {
     if (this.isFirefoxAndroid()) throw new Error("On Android, install the original uBlock Origin add-on in Firefox. Vortex Browser Bridge does not run a second blocker.");
     if (!this.isFirefox()) {
-      throw new Error("Full filter-list mode requires Firefox desktop or Firefox for Android. Chromium MV3 uses DNR-compatible rules.");
+      throw new Error("Full filter-list mode requires Firefox desktop. Android uses the original uBlock Origin add-on; Chromium MV3 uses DNR-compatible rules.");
     }
     const blocker = await WebExtensionBlocker.fromPrebuiltAdsAndTracking(fetch);
     await saveGhosteryEngine(blocker.serialize());
