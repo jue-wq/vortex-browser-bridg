@@ -29,7 +29,7 @@ jobs:
         with:
           name: vortex-browser-bridge-${{ github.sha }}
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
           path: |
             .output/chrome-mv3/**
             .output/firefox-mv3/**
