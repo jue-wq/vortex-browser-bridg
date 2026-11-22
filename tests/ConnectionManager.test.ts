@@ -36,6 +36,13 @@ describe("ConnectionManager mock-host contract",()=>{
     expect(request.type).toBe("handshake");
     expect(typeof request.request_id).toBe("string");
   });
+  it("requests recent task status through the shared IPC envelope",async()=>{
+    const response=await manager.request("task_status",{limit:8});
+    expect(response.type).toBe("ack");
+    const request=transport.sent[0] as {type:string;payload:Record<string,unknown>};
+    expect(request.type).toBe("task_status");
+    expect(request.payload).toEqual({limit:8});
+  });
   it("rejects a response with the wrong request id",async()=>{
     transport.responseMode="mismatch";
     await expect(manager.request("task_control",{action:"pause"})).rejects.toThrow(/request_id mismatch/);
