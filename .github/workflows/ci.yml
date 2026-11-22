@@ -62,6 +62,12 @@ jobs:
             (cd .output/firefox-mv2 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox-android.xpi" . -x '*.map')
           fi
           test -s release-assets/vortex-browser-bridge-firefox-android.xpi
+      - name: Validate standalone extension packages
+        shell: bash
+        run: |
+          test "$(head -c 4 release-assets/vortex-browser-bridge-chrome.crx)" = "Cr24"
+          unzip -t release-assets/vortex-browser-bridge-firefox.xpi
+          unzip -t release-assets/vortex-browser-bridge-firefox-android.xpi
       - name: Upload Chrome CRX
         uses: actions/upload-artifact@v4
         with:
