@@ -15,7 +15,7 @@ function Options(){
   const [incognitoAllowed,setIncognitoAllowed]=useState(false);
   const [adblockEnabled,setAdblockEnabled]=useState(true);
   const [customRules,setCustomRules]=useState("");
-  const [mobilePort,setMobilePort]=useState("17321");
+  const [mobilePort,setMobilePort]=useState("");
   const [mobileKey,setMobileKey]=useState("");
   const [fullListsEnabled,setFullListsEnabled]=useState(false);
   const [updatingLists,setUpdatingLists]=useState(false);
@@ -30,14 +30,22 @@ function Options(){
       setIncognitoAllowed(saved.captureIncognitoAllowed===true);
       setAdblockEnabled(saved.vortexAdblockEnabled!==false);
       setCustomRules(typeof saved.vortexCustomFilterRules==="string"?saved.vortexCustomFilterRules:"");
-      setMobilePort(String(saved.mobileBridgePort??17321));
+      setMobilePort(typeof saved.mobileBridgePort==="number"?String(saved.mobileBridgePort):"");
       setMobileKey(typeof saved.mobileBridgeApiKey==="string"?saved.mobileBridgeApiKey:"");
       setFullListsEnabled(saved.vortexFullFilterListsEnabled===true);
     });
   },[]);
   const save=async()=>{
+    const apiKey=mobileKey.trim();
     const port=Number(mobilePort);
-    if(!Number.isInteger(port)||port<1||port>65535)return;
+    if(apiKey.length>0&&(!Number.isInteger(port)||port<1||port>65535)){
+      window.alert("Enter the exact loopback port shown by the running VortexDM Android app.");
+      return;
+    }
+    if(apiKey.length>0&&apiKey.length<32){
+      window.alert("The VortexDM one-time API key must contain at least 32 characters.");
+      return;
+    }
     const minMb=Number(minSizeMb);
     if(!Number.isFinite(minMb)||minMb<0||minMb>1048576)return;
     const splitValues=(value:string)=>value.split(/[\s,;]+/).map(item=>item.trim()).filter(Boolean);
@@ -46,8 +54,10 @@ function Options(){
       captureExcludedDomains:splitValues(excludedDomains),captureAllowedDomains:splitValues(allowedDomains),
       captureIncludedExtensions:splitValues(includedExtensions),captureIncludedMimeTypes:splitValues(includedMimeTypes),
       captureIncognitoAllowed:incognitoAllowed,...(!firefoxAndroid?{vortexAdblockEnabled:adblockEnabled}:{}),
-      vortexCustomFilterRules:customRules,mobileBridgePort:port,mobileBridgeApiKey:mobileKey
+      vortexCustomFilterRules:customRules
     });
+    if(apiKey.length>0) await browser.storage.local.set({mobileBridgePort:port,mobileBridgeApiKey:apiKey});
+    else await browser.storage.local.remove(["mobileBridgePort","mobileBridgeApiKey"]);
     window.alert(t("settingsSaved","Settings saved."));
   };
   const updateFullLists=async()=>{
