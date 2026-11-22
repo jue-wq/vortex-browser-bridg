@@ -100,7 +100,7 @@ function Options(){
         <p>{t("customRulesHelp","Custom rules use ABP/uBO-like syntax. Unsupported advanced syntax is ignored by the built-in Chromium-compatible subset.")}</p>
       </article>}
 
-      <article><h3>{t("androidBridge","Android local bridge")}</h3><p>{t("androidBridgeHelp","Firefox for Android has no Native Messaging API. Enable the VortexDM app loopback server first. It must listen on 127.0.0.1 only.")}</p><label class="stack">{t("localPort","Local port")}<input value={mobilePort} onInput={event=>setMobilePort(event.currentTarget.value)} /></label><label class="stack">{t("oneTimeKey","One-time API key")}<input type="password" value={mobileKey} onInput={event=>setMobileKey(event.currentTarget.value)} placeholder={t("apiKeyHelp","At least 32 random characters")} /></label></article>
+      <article><h3>{t("androidBridge","Android local bridge")}</h3><p>{t("androidBridgeHelp","Firefox for Android has no Native Messaging API. Enable the VortexDM loopback server first. Copy the current port and session API key from the app; both may change when VortexDM restarts.")}</p><label class="stack">{t("localPort","Local port")}<input value={mobilePort} onInput={event=>setMobilePort(event.currentTarget.value)} /></label><label class="stack">{t("oneTimeKey","Session API key (changes when VortexDM restarts)")}<input type="password" value={mobileKey} onInput={event=>setMobileKey(event.currentTarget.value)} placeholder={t("apiKeyHelp","At least 32 random characters")} /></label></article>
       <button onClick={()=>void save()}>{t("saveSettings","Save settings")}</button>
     </section>
   </main>;
