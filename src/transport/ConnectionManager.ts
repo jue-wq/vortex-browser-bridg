@@ -28,7 +28,9 @@ export class ConnectionManager {
     const outgoing=makeEnvelope(type,crypto.randomUUID(),payload);
     const incoming=validateEnvelope(await (await this.ensureTransport()).send(outgoing,timeoutMs));
     if(incoming.request_id!==outgoing.request_id)throw new Error("IPC request_id mismatch");
-    if(incoming.type==="error")throw new Error(String(incoming.payload.message??"VortexDM rejected request"));
+    if(incoming.type!=="ack"&&incoming.type!=="error")
+      throw new Error(`Unexpected IPC response type: ${incoming.type}`);
+    if(incoming.type==="error")throw new Error(String(incoming.payload.message??incoming.payload.code??"VortexDM rejected request"));
     if(incoming.type==="ack" && incoming.payload.accepted===false)
       throw new Error(String(incoming.payload.message??incoming.payload.code??"VortexDM did not accept the request"));
     return incoming;
