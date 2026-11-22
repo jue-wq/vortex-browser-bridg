@@ -22,11 +22,11 @@ Every message is a UTF-8 JSON object with these required fields:
 | Extension → App | `extract_media` | `webpage_url`, `page_title`, `user_agent`, `playlist_mode` (`single`/`playlist`); optional queue_id | `ack`: task_id, accepted; requires an active yt-dlp profile |
 | Extension → App | `add_batch` | `items[]`, `source_page`; optional queue_id | `ack`: count |
 | Extension → App | `add_batch_chunk` | `chunk_id`, `chunk_index`, `chunk_total`, base64 `chunk_data` | `ack`: accepted, task_ids/count when final chunk is assembled |
-| Extension → App | `task_control` | `action` (`pause`/`resume`/`cancel`), `task_id` | `ack`: accepted, task_id, resulting status |
+| Extension → App | `task_control` | `action` (`pause`/`resume`/`cancel`), `task_id` | `ack`: accepted, task_id, resulting status |\n| Extension → App | `task_status` | optional `limit` (1–50, default 20) | `ack`: recent task IDs, filenames, statuses and byte progress |
 | Either → Either | `ack` | `accepted` plus message-specific fields | Correlated result |
 | Either → Either | `error` | `code`, `message` | Correlated failure |
 
-The current implementation does not send unsolicited `status_update` or `queues_sync` messages. Headers are currently empty for browser-captured tasks; authorization/session headers are not forwarded. Media extraction sends only page URL/title/playlist mode and selected queue.
+Task status is synchronized by extension polling (`task_status`) while the popup is open; unsolicited `status_update` or `queues_sync` push messages are not implemented. Headers are currently empty for browser-captured tasks; authorization/session headers are not forwarded. Media extraction sends only page URL/title/playlist mode and selected queue.
 
 ## Framing and chunking
 Native Messaging uses a 4-byte unsigned little-endian byte length followed by exactly that many UTF-8 JSON bytes. Reject zero-length and >1 MiB frames. Large batches are split into `add_batch_chunk` payloads with `chunk_id`, zero-based `chunk_index`, `chunk_total`, and base64 `chunk_data`; each data chunk is at most 256 KiB. Reject inconsistent/duplicate chunks and expire incomplete assemblies after 30 seconds.
