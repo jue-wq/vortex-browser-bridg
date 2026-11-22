@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-assets=()
-for name in \
-  vortex-browser-bridge-chrome.crx \
-  vortex-browser-bridge-firefox.xpi \
-  vortex-browser-bridge-firefox-unsigned.zip \
-  vortex-browser-bridge-firefox-android.xpi \
-  vortex-browser-bridge-firefox-android-unsigned.zip; do
-  [[ -f "release-assets/$name" ]] && assets+=("release-assets/$name")
+assets=(
+  dist/vortex-browser-bridge-chrome.zip
+  dist/vortex-browser-bridge-firefox.xpi
+  dist/vortex-browser-bridge-firefox-android.xpi
+)
+for asset in "${assets[@]}"; do
+  test -s "$asset" || { echo "Release asset missing: $asset" >&2; exit 1; }
 done
 
 if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
@@ -26,15 +25,4 @@ if ! gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
     --target "$GITHUB_SHA" --generate-notes "${prerelease[@]}"
 fi
 
-# Remove any stale signed-looking XPI when the current run only produced an unsigned ZIP.
-if [[ ! -f release-assets/vortex-browser-bridge-firefox.xpi ]]; then
-  gh release delete-asset "$tag" vortex-browser-bridge-firefox.xpi \
-    --repo "$GITHUB_REPOSITORY" --yes || true
-fi
-if [[ ! -f release-assets/vortex-browser-bridge-firefox-android.xpi ]]; then
-  gh release delete-asset "$tag" vortex-browser-bridge-firefox-android.xpi \
-    --repo "$GITHUB_REPOSITORY" --yes || true
-fi
-
-if (( ${#assets[@]} == 0 )); then echo "No extension packages found" >&2; exit 1; fi
 gh release upload "$tag" --repo "$GITHUB_REPOSITORY" "${assets[@]}" --clobber
