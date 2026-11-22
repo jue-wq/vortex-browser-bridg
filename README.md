@@ -16,23 +16,26 @@ The local ABP/uBO-compatible subset and Ghostery engine are maintained for non-A
 
 ## Development
 ```bash
-npm install
+npm ci
 npm run check
 npm run build:chrome
 npm run build:firefox
 npm run build:firefox:android
+bash scripts/package-extensions.sh
 ```
 
 ## Durable checkpoints
 Read `docs/PROJECT_STATUS.md`, `docs/PHASE_CHECKLIST.md`, `docs/CHECKPOINT.md` and `progress.json` before resuming. Run `npm run check:progress` before phase transitions. Only attach observed CI evidence to completed checks.
 
 ## Standalone extension packages
-CI builds each browser target separately and publishes individual files:
-- `vortex-browser-bridge-chrome.crx` — Chrome/Chromium CRX3 package
-- `vortex-browser-bridge-firefox.xpi` — Firefox desktop package
-- `vortex-browser-bridge-firefox-android.xpi` — Firefox for Android package
+CI creates and validates exactly these individual browser archives under `dist/`:
+- `vortex-browser-bridge-chrome.zip` — Chrome/Chromium MV3 archive; extract it and load the extracted directory using the browser's **Load unpacked** developer option.
+- `vortex-browser-bridge-firefox.xpi` — Firefox Desktop WebExtension package; install the XPI directly.
+- `vortex-browser-bridge-firefox-android.xpi` — Firefox for Android WebExtension package; install the XPI through Firefox's supported add-on installation flow.
 
-Tag releases attach these files individually to the GitHub Release; users do not need to download a combined ZIP. For stable extension identity, configure the repository secret `CHROME_EXTENSION_PRIVATE_KEY` with a persistent PEM private key; otherwise the CI creates a one-run key and the CRX ID changes between builds. Chromium may restrict sideloading CRX files outside managed policies or the Chrome Web Store, so the unpacked MV3 output remains the developer-mode fallback. Configure `AMO_JWT_ISSUER` and `AMO_JWT_SECRET` to have CI sign both Firefox XPIs through Mozilla Add-ons; without those secrets the workflow emits unsigned XPIs for temporary/developer testing and they are not represented as normal release-channel installable packages.
+Firefox XPIs are signed through Mozilla Add-ons when `AMO_JWT_ISSUER` and `AMO_JWT_SECRET` are configured. Without those secrets, CI still emits structurally valid unsigned XPI archives for developer/testing use; Firefox release installation may require Mozilla signing. The Android manifest is checked to ensure it does not request `nativeMessaging`. Each package is integrity-tested and must remain below 600 KiB.
+
+For stable Chromium extension identity, configure `CHROME_EXTENSION_PRIVATE_KEY` if you distribute CRX builds separately; the CI deliverable here is the requested ZIP archive. Chromium may restrict sideloading outside managed policies or the Chrome Web Store.
 
 ## Firefox data disclosure
 The Firefox manifest declares `websiteActivity` as required data because selected download/media URLs and related page context can be handed from the add-on to the user's local VortexDM application. This is a local handoff; the extension does not send this information to a VortexDM cloud service. Firefox displays the disclosure during installation on supported versions. The declaration is intentionally not suppressed or marked as `none`, since that would understate the local application handoff.
