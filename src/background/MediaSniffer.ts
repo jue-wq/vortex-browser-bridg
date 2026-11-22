@@ -25,7 +25,7 @@ export function contentTypeFromHeaders(headers: Array<{name: string; value?: str
   if (!headers) return "";
   for (let index = headers.length - 1; index >= 0; index--) {
     const header = headers[index];
-    if (header.name.toLowerCase() === "content-type" && typeof header.value === "string") {
+    if (header && header.name.toLowerCase() === "content-type" && typeof header.value === "string") {
       return header.value;
     }
   }
