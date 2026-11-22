@@ -30,7 +30,8 @@
       },
       "evidence": [
         "CI run 44953304877 passed: npm install, WXT prepare/typecheck, Vitest, Chrome MV3 build, Firefox desktop MV3 build and Firefox Android MV2 build. Protocol sync against VortexDM also passed. Mock native-host handshake and chunk round-trip E2E remain pending.",
-        "Commit 9ac565c adds mock-host ConnectionManager handshake, correlation, explicit rejection ACK, large-batch chunk ACK and missing-response tests. Actual browser Native Messaging host E2E remains pending."
+        "Commit 9ac565c adds mock-host ConnectionManager handshake, correlation, explicit rejection ACK, large-batch chunk ACK and missing-response tests. Actual browser Native Messaging host E2E remains pending.",
+        "CI run 44986221816 passed: checkpoint validator, strict TypeScript, Vitest suite, Chrome MV3, Firefox desktop MV3 and Firefox Android MV2 builds."
       ]
     },
     {
