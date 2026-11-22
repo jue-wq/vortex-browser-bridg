@@ -4,7 +4,7 @@ import { browser } from "wxt/browser";
 import { ConnectionManager } from "../../src/transport/ConnectionManager";
 import "./style.css";
 
-const t=(key:string,fallback:string)=>browser.i18n.getMessage(key)||fallback;
+const t=(key:string,fallback:string)=>(browser.i18n as unknown as {getMessage:(message:string)=>string}).getMessage(key)||fallback;
 
 function browserName():"firefox"|"chrome"{return /firefox/i.test(navigator.userAgent)?"firefox":"chrome";}
 function Popup(){

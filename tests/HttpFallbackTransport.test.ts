@@ -17,9 +17,9 @@ describe("Android loopback transport",()=>{
     await transport.connect();
     const response=await transport.send({request_id:"r",type:"handshake"});
     expect((response as {type:string}).type).toBe("ack");
-    expect(fetchMock.mock.calls[0][0]).toBe("http://127.0.0.1:18432/health");
-    expect(fetchMock.mock.calls[1][0]).toBe("http://127.0.0.1:18432/ipc");
-    expect(new Headers(fetchMock.mock.calls[1][1]?.headers).get("X-Vortex-Api-Key")).toBe("k".repeat(64));
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("http://127.0.0.1:18432/health");
+    expect(fetchMock.mock.calls[1]?.[0]).toBe("http://127.0.0.1:18432/ipc");
+    expect(new Headers(fetchMock.mock.calls[1]?.[1]?.headers).get("X-Vortex-Api-Key")).toBe("k".repeat(64));
   });
   it("clears connected state after server failure so next request reconnects",async()=>{
     const fetchMock=vi.fn()

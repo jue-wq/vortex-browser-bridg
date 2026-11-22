@@ -3,7 +3,7 @@ import { useEffect, useState } from "preact/hooks";
 import { browser } from "wxt/browser";
 import "./style.css";
 
-const t=(key:string,fallback:string)=>browser.i18n.getMessage(key)||fallback;
+const t=(key:string,fallback:string)=>(browser.i18n as unknown as {getMessage:(message:string)=>string}).getMessage(key)||fallback;
 
 function Options(){
   const [captureEnabled,setCaptureEnabled]=useState(true);
@@ -45,7 +45,7 @@ function Options(){
       captureEnabled,captureMinSizeBytes:Math.floor(minMb*1048576),
       captureExcludedDomains:splitValues(excludedDomains),captureAllowedDomains:splitValues(allowedDomains),
       captureIncludedExtensions:splitValues(includedExtensions),captureIncludedMimeTypes:splitValues(includedMimeTypes),
-      captureIncognitoAllowed,...(!firefoxAndroid?{vortexAdblockEnabled:adblockEnabled}:{}),
+      captureIncognitoAllowed:incognitoAllowed,...(!firefoxAndroid?{vortexAdblockEnabled:adblockEnabled}:{}),
       vortexCustomFilterRules:customRules,mobileBridgePort:port,mobileBridgeApiKey:mobileKey
     });
     window.alert(t("settingsSaved","Settings saved."));
