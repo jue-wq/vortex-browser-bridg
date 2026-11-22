@@ -7,18 +7,27 @@ import { HttpFallbackTransport } from "./HttpFallbackTransport";
 
 export class ConnectionManager {
   private transport:ITransport|null=null;
+  private mobileConfig:string|null=null;
 
   private async ensureTransport():Promise<ITransport>{
-    if(this.transport)return this.transport;
     const platform=await browser.runtime.getPlatformInfo();
     if(platform.os==="android"){
       const saved=await browser.storage.local.get(["mobileBridgePort","mobileBridgeApiKey"]);
       const port=typeof saved.mobileBridgePort==="number"?saved.mobileBridgePort:0;
       const apiKey=typeof saved.mobileBridgeApiKey==="string"?saved.mobileBridgeApiKey:"";
       if(!Number.isInteger(port)||port<1||port>65535||apiKey.length<32)
-        throw new Error("Android bridge is not configured. Copy the exact port and one-time API key shown by the running VortexDM app into Bridge Settings.");
+        throw new Error("Android bridge is not configured. Copy the current port and session API key shown by the running VortexDM app into Bridge Settings.");
+      const config=`${port}:${apiKey}`;
+      if(this.transport&&this.mobileConfig===config)return this.transport;
+      this.transport?.disconnect();
+      this.mobileConfig=config;
       this.transport=new HttpFallbackTransport(port,apiKey);
-    }else this.transport=new NativeMessagingTransport();
+    }else{
+      if(this.transport&&this.mobileConfig===null)return this.transport;
+      this.transport?.disconnect();
+      this.mobileConfig=null;
+      this.transport=new NativeMessagingTransport();
+    }
     return this.transport;
   }
 
@@ -49,6 +58,6 @@ export class ConnectionManager {
     return last;
   }
 
-  useTransport(transport:ITransport):void{this.transport?.disconnect();this.transport=transport;}
+  useTransport(transport:ITransport):void{this.transport?.disconnect();this.transport=transport;this.mobileConfig=null;}
   disconnect():void{this.transport?.disconnect();}
 }
