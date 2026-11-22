@@ -69,21 +69,21 @@ jobs:
           unzip -t release-assets/vortex-browser-bridge-firefox.xpi
           unzip -t release-assets/vortex-browser-bridge-firefox-android.xpi
       - name: Upload Chrome CRX
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: vortex-browser-bridge-chrome-crx
           if-no-files-found: error
           retention-days: 30
           path: release-assets/vortex-browser-bridge-chrome.crx
       - name: Upload Firefox desktop XPI
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: vortex-browser-bridge-firefox-xpi
           if-no-files-found: error
           retention-days: 30
           path: release-assets/vortex-browser-bridge-firefox.xpi
       - name: Upload Firefox Android XPI
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: vortex-browser-bridge-firefox-android-xpi
           if-no-files-found: error
@@ -109,17 +109,17 @@ jobs:
       contents: write
     steps:
       - name: Download Chrome CRX
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: vortex-browser-bridge-chrome-crx
           path: release-assets
       - name: Download Firefox desktop XPI
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: vortex-browser-bridge-firefox-xpi
           path: release-assets
       - name: Download Firefox Android XPI
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: vortex-browser-bridge-firefox-android-xpi
           path: release-assets
