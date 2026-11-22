@@ -14,9 +14,18 @@ npm run check
 npm run build:chrome
 npm run build:firefox
 npm run build:firefox:android
+bash scripts/package-extensions.sh
 ```
 
-Build outputs are written under `.output/`. Load the matching unpacked directory in the browser's extension developer page for local testing. Store releases must be signed by the target store.
+Build outputs are written under `.output/`; validated standalone archives are written under `dist/`.
+
+## Install the packaged extension
+
+- **Chrome / Chromium:** download `vortex-browser-bridge-chrome.zip`, extract it, open the browser's extensions page, enable Developer mode, and choose **Load unpacked** on the extracted directory. Chrome's developer-mode loader expects a directory, not a directly installable ZIP.
+- **Firefox Desktop:** install `vortex-browser-bridge-firefox.xpi` directly using Firefox's add-on installation flow. A release-ready install requires Mozilla signing.
+- **Firefox for Android:** install `vortex-browser-bridge-firefox-android.xpi` through Firefox for Android's supported add-on installation flow. It is built without the `nativeMessaging` permission and uses the authenticated local loopback bridge.
+
+Unsigned Firefox XPIs are for development/testing and may be rejected by normal Firefox release builds. CI signs them through Mozilla Add-ons when `AMO_JWT_ISSUER` and `AMO_JWT_SECRET` are configured.
 
 ## Desktop connection
 
@@ -26,7 +35,7 @@ Build and install VortexDM's `vortex-native-host`, then register it using the sc
 
 1. Install Firefox for Android.
 2. Install the original uBlock Origin by Raymond Hill from the [official Mozilla Add-ons listing](https://addons.mozilla.org/android/addon/ublock-origin/).
-3. Install the signed Android-compatible Vortex Browser Bridge build.
+3. Install the Android-compatible Vortex Browser Bridge XPI.
 4. Open VortexDM on the same device and enable its Android loopback server.
 5. Copy the ephemeral port and API key from VortexDM's Android Bridge panel.
 6. Open Bridge options in Firefox for Android and enter the port and key.
