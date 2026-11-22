@@ -1,5 +1,5 @@
 import {describe,expect,it} from "vitest";
-import {classifyMedia,deduplicateMedia} from "../src/background/MediaSniffer";
+import {classifyMedia,contentTypeFromHeaders,deduplicateMedia} from "../src/background/MediaSniffer";
 
 describe("MediaSniffer",()=>{
   it.each([
@@ -12,6 +12,11 @@ describe("MediaSniffer",()=>{
     ["https://cdn.example/page.html","text/html","null"]
   ] as const)("classifies %s", (url,mime,expected)=>{
     expect(classifyMedia(url,mime)).toBe(expected==="null"?null:expected);
+  });
+  it("reads Content-Type case-insensitively and prefers the final response header",()=>{
+    expect(contentTypeFromHeaders([{name:"content-type",value:"text/html"},{name:"Content-Type",value:"video/mp4"}])).toBe("video/mp4");
+    expect(contentTypeFromHeaders(undefined)).toBe("");
+    expect(classifyMedia("https://cdn.example/stream?id=42",contentTypeFromHeaders([{name:"Content-Type",value:"application/vnd.apple.mpegurl"}]))).toBe("hls");
   });
   it("deduplicates identical media URLs per tab but preserves separate tabs",()=>{
     const items=[
