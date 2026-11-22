@@ -27,19 +27,40 @@ jobs:
       - run: npm run build:firefox:android
       - name: Package Chrome extension as CRX3
         shell: bash
+        env:
+          CHROME_EXTENSION_PRIVATE_KEY: ${{ secrets.CHROME_EXTENSION_PRIVATE_KEY }}
         run: |
           mkdir -p release-assets
+          if [ -n "${CHROME_EXTENSION_PRIVATE_KEY:-}" ]; then
+            printf '%s\n' "$CHROME_EXTENSION_PRIVATE_KEY" > "$RUNNER_TEMP/vortex-browser-bridge-chrome.pem"
+          fi
           npx --yes crx3@2.0.0 --keyPath "$RUNNER_TEMP/vortex-browser-bridge-chrome.pem" --crxPath "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-chrome.crx" .output/chrome-mv3
           test -s release-assets/vortex-browser-bridge-chrome.crx
       - name: Package Firefox desktop extension as XPI
         shell: bash
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
-          (cd .output/firefox-mv3 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox.xpi" . -x '*.map')
+          if [ -n "${AMO_JWT_ISSUER:-}" ] && [ -n "${AMO_JWT_SECRET:-}" ]; then
+            npx --yes web-ext@8 sign --source-dir .output/firefox-mv3 --artifacts-dir release-assets/firefox-signed --channel unlisted --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
+            cp release-assets/firefox-signed/*.xpi release-assets/vortex-browser-bridge-firefox.xpi
+          else
+            (cd .output/firefox-mv3 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox.xpi" . -x '*.map')
+          fi
           test -s release-assets/vortex-browser-bridge-firefox.xpi
       - name: Package Firefox for Android extension as XPI
         shell: bash
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
-          (cd .output/firefox-mv2 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox-android.xpi" . -x '*.map')
+          if [ -n "${AMO_JWT_ISSUER:-}" ] && [ -n "${AMO_JWT_SECRET:-}" ]; then
+            npx --yes web-ext@8 sign --source-dir .output/firefox-mv2 --artifacts-dir release-assets/firefox-android-signed --channel unlisted --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
+            cp release-assets/firefox-android-signed/*.xpi release-assets/vortex-browser-bridge-firefox-android.xpi
+          else
+            (cd .output/firefox-mv2 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox-android.xpi" . -x '*.map')
+          fi
           test -s release-assets/vortex-browser-bridge-firefox-android.xpi
       - name: Upload Chrome CRX
         uses: actions/upload-artifact@v4
