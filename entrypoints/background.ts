@@ -42,10 +42,17 @@ export default defineBackground({
     downloadsApi?.onCreated?.addListener(item=>{void interceptDownload(item);});
 
     browser.webRequest.onCompleted.addListener(details => {
-      const kind=classifyMedia(details.url);
-      if(!kind||details.tabId<0)return;
-      void saveDetectedMedia({url:details.url,kind,tabId:details.tabId,seenAt:Date.now()});
-    },{urls:["http://*/*","https://*/*"]});
+      if(details.tabId<0)return;
+      const responseHeaders=(details as unknown as {responseHeaders?:Array<{name:string;value?:string}>}).responseHeaders;
+      const contentType=contentTypeFromHeaders(responseHeaders);
+      const kind=classifyMedia(details.url,contentType);
+      if(!kind)return;
+      void browser.tabs.get(details.tabId).then(tab=>{
+        void saveDetectedMedia({url:details.url,kind,tabId:details.tabId,seenAt:Date.now(),...(tab.title?{title:tab.title}:{})});
+      }).catch(()=>{
+        void saveDetectedMedia({url:details.url,kind,tabId:details.tabId,seenAt:Date.now()});
+      });
+    },{urls:["http://*/*","https://*/*"]},["responseHeaders"]);
 
     browser.tabs.onRemoved.addListener(tabId=>{
       void browser.storage.session.get("vortex_media_by_tab").then(state=>{
