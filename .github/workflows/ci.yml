@@ -25,16 +25,43 @@ jobs:
       - run: npm run build:chrome
       - run: npm run build:firefox
       - run: npm run build:firefox:android
-      - name: Upload browser extension packages
+      - name: Package Chrome extension as CRX3
+        shell: bash
+        run: |
+          mkdir -p release-assets
+          npx --yes crx3@2.0.0 --keyPath "$RUNNER_TEMP/vortex-browser-bridge-chrome.pem" --crxPath "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-chrome.crx" .output/chrome-mv3
+          test -s release-assets/vortex-browser-bridge-chrome.crx
+      - name: Package Firefox desktop extension as XPI
+        shell: bash
+        run: |
+          (cd .output/firefox-mv3 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox.xpi" . -x '*.map')
+          test -s release-assets/vortex-browser-bridge-firefox.xpi
+      - name: Package Firefox for Android extension as XPI
+        shell: bash
+        run: |
+          (cd .output/firefox-mv2 && zip -qr "$GITHUB_WORKSPACE/release-assets/vortex-browser-bridge-firefox-android.xpi" . -x '*.map')
+          test -s release-assets/vortex-browser-bridge-firefox-android.xpi
+      - name: Upload Chrome CRX
         uses: actions/upload-artifact@v4
         with:
-          name: vortex-browser-bridge-${{ github.sha }}
+          name: vortex-browser-bridge-chrome-crx
           if-no-files-found: error
           retention-days: 30
-          path: |
-            .output/chrome-mv3/**
-            .output/firefox-mv3/**
-            .output/firefox-mv2/**
+          path: release-assets/vortex-browser-bridge-chrome.crx
+      - name: Upload Firefox desktop XPI
+        uses: actions/upload-artifact@v4
+        with:
+          name: vortex-browser-bridge-firefox-xpi
+          if-no-files-found: error
+          retention-days: 30
+          path: release-assets/vortex-browser-bridge-firefox.xpi
+      - name: Upload Firefox Android XPI
+        uses: actions/upload-artifact@v4
+        with:
+          name: vortex-browser-bridge-firefox-android-xpi
+          if-no-files-found: error
+          retention-days: 30
+          path: release-assets/vortex-browser-bridge-firefox-android.xpi
   protocol-sync:
     runs-on: ubuntu-latest
     timeout-minutes: 10
