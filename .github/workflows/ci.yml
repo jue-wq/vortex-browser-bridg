@@ -95,3 +95,32 @@ jobs:
           repository: jue-wq/VortexDM
           path: VortexDM
       - run: diff -u VortexDM/docs/IPC_PROTOCOL.md browser-bridge/docs/IPC_PROTOCOL.md
+  publish-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [verify, protocol-sync]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Chrome CRX
+        uses: actions/download-artifact@v4
+        with:
+          name: vortex-browser-bridge-chrome-crx
+          path: release-assets
+      - name: Download Firefox desktop XPI
+        uses: actions/download-artifact@v4
+        with:
+          name: vortex-browser-bridge-firefox-xpi
+          path: release-assets
+      - name: Download Firefox Android XPI
+        uses: actions/download-artifact@v4
+        with:
+          name: vortex-browser-bridge-firefox-android-xpi
+          path: release-assets
+      - name: Publish individual extension files
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-assets/*.crx
+            release-assets/*.xpi
+          generate_release_notes: true
