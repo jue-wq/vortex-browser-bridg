@@ -2,7 +2,7 @@ import { browser } from "wxt/browser";
 import { ConnectionManager } from "../src/transport/ConnectionManager";
 import { addBatchPayloadSchema, addDownloadPayloadSchema, extractMediaPayloadSchema } from "../src/protocol/schema";
 import { decideCapture, defaultInterceptionSettings } from "../src/background/RuleEngine";
-import { classifyMedia, deduplicateMedia, type DetectedMedia } from "../src/background/MediaSniffer";
+import { classifyMedia, contentTypeFromHeaders, deduplicateMedia, type DetectedMedia } from "../src/background/MediaSniffer";
 import { detectYtDlpPage } from "../src/background/YtDlpDetector";
 import { AdblockController } from "../src/adblock/AdblockController";
 
