@@ -25,3 +25,11 @@ npm run build:firefox:android
 
 ## Durable checkpoints
 Read `docs/PROJECT_STATUS.md`, `docs/PHASE_CHECKLIST.md`, `docs/CHECKPOINT.md` and `progress.json` before resuming. Run `npm run check:progress` before phase transitions. Only attach observed CI evidence to completed checks.
+
+## Standalone extension packages
+CI builds each browser target separately and publishes individual files:
+- `vortex-browser-bridge-chrome.crx` — Chrome/Chromium CRX3 package
+- `vortex-browser-bridge-firefox.xpi` — Firefox desktop package
+- `vortex-browser-bridge-firefox-android.xpi` — Firefox for Android package
+
+Tag releases attach these files individually to the GitHub Release; users do not need to download a combined ZIP. The CI-generated Chrome CRX uses a per-run key unless a stable `CHROME_EXTENSION_PRIVATE_KEY` is configured. Chromium may restrict sideloading CRX files outside managed policies or the Chrome Web Store, so the unpacked MV3 output remains the developer-mode fallback. Firefox XPIs require Mozilla AMO signing for normal release-channel installation; without AMO API credentials the CI output is an unsigned package intended for temporary/developer testing, not a claim of signed installability.
