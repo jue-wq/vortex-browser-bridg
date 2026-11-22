@@ -37,10 +37,19 @@ export const extractMediaPayloadSchema = z.object({
 }).strict();
 
 export const addBatchPayloadSchema = z.object({
-  items: z.array(z.object({url: z.string().url(), filename: z.string().optional(), headers: z.record(z.string()).optional()}).strict()),
+  items: z.array(z.object({url: z.string().url(), filename: z.string().optional(), headers: z.record(z.string()).optional()}).strict()).min(1).max(10000),
   source_page: z.string().url(),
   queue_id: z.string().optional()
-}).strict();
+}).strict().superRefine((value, ctx) => {
+  value.items.forEach((item, index) => {
+    if (!["http:", "https:"].includes(new URL(item.url).protocol)) {
+      ctx.addIssue({code:z.ZodIssueCode.custom,path:["items",index,"url"],message:"Only HTTP(S) URLs are allowed"});
+    }
+  });
+  if (!["http:", "https:"].includes(new URL(value.source_page).protocol)) {
+    ctx.addIssue({code:z.ZodIssueCode.custom,path:["source_page"],message:"Only HTTP(S) source pages are allowed"});
+  }
+});
 
 export const addBatchChunkPayloadSchema = z.object({
   chunk_id: z.string().min(1).max(128),
