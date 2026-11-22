@@ -13,9 +13,10 @@ export class ConnectionManager {
     const platform=await browser.runtime.getPlatformInfo();
     if(platform.os==="android"){
       const saved=await browser.storage.local.get(["mobileBridgePort","mobileBridgeApiKey"]);
-      const port=typeof saved.mobileBridgePort==="number"?saved.mobileBridgePort:17321;
+      const port=typeof saved.mobileBridgePort==="number"?saved.mobileBridgePort:0;
       const apiKey=typeof saved.mobileBridgeApiKey==="string"?saved.mobileBridgeApiKey:"";
-      if(apiKey.length<32)throw new Error("Android bridge is not configured. Enable the VortexDM local bridge and enter its one-time API key in Settings.");
+      if(!Number.isInteger(port)||port<1||port>65535||apiKey.length<32)
+        throw new Error("Android bridge is not configured. Copy the exact port and one-time API key shown by the running VortexDM app into Bridge Settings.");
       this.transport=new HttpFallbackTransport(port,apiKey);
     }else this.transport=new NativeMessagingTransport();
     return this.transport;
