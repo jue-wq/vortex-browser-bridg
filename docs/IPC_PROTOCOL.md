@@ -22,7 +22,8 @@ Every message is a UTF-8 JSON object with these required fields:
 | Extension → App | `extract_media` | `webpage_url`, `page_title`, `user_agent`, `playlist_mode` (`single`/`playlist`); optional queue_id | `ack`: task_id, accepted; requires an active yt-dlp profile |
 | Extension → App | `add_batch` | `items[]`, `source_page`; optional queue_id | `ack`: count |
 | Extension → App | `add_batch_chunk` | `chunk_id`, `chunk_index`, `chunk_total`, base64 `chunk_data` | `ack`: accepted, task_ids/count when final chunk is assembled |
-| Extension → App | `task_control` | `action` (`pause`/`resume`/`cancel`), `task_id` | `ack`: accepted, task_id, resulting status |\n| Extension → App | `task_status` | optional `limit` (1–50, default 20) | `ack`: recent task IDs, filenames, statuses and byte progress |
+| Extension → App | `task_control` | `action` (`pause`/`resume`/`cancel`), `task_id` | `ack`: accepted, task_id, resulting status |
+| Extension → App | `task_status` | optional `limit` (1–50, default 20) | `ack`: recent task IDs, filenames, statuses and byte progress |
 | Either → Either | `ack` | `accepted` plus message-specific fields | Correlated result |
 | Either → Either | `error` | `code`, `message` | Correlated failure |
 
