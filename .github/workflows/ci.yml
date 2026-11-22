@@ -107,31 +107,39 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
     steps:
-      - name: Download Chrome CRX
-        uses: actions/download-artifact@v7
-        with:
-          name: vortex-browser-bridge-chrome-crx
-          path: release-assets
-      - name: Download Firefox desktop XPI
-        uses: actions/download-artifact@v7
-        with:
-          name: vortex-browser-bridge-firefox-xpi
-          path: release-assets
-      - name: Download Firefox Android XPI
-        uses: actions/download-artifact@v7
-        with:
-          name: vortex-browser-bridge-firefox-android-xpi
-          path: release-assets
+      - name: Download individual extension packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          mkdir -p release-assets/chrome release-assets/firefox release-assets/firefox-android
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name vortex-browser-bridge-chrome-crx --dir release-assets/chrome
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name vortex-browser-bridge-firefox-xpi --dir release-assets/firefox
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name vortex-browser-bridge-firefox-android-xpi --dir release-assets/firefox-android
+          test -s release-assets/chrome/vortex-browser-bridge-chrome.crx
+          test -s release-assets/firefox/vortex-browser-bridge-firefox.xpi
+          test -s release-assets/firefox-android/vortex-browser-bridge-firefox-android.xpi
       - name: Publish individual extension files
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'nightly' }}
-          name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'Vortex Browser Bridge Nightly' }}
-          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-          make_latest: false
-          target_commitish: main
-          files: |
-            release-assets/*.crx
-            release-assets/*.xpi
-          generate_release_notes: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG="$GITHUB_REF_NAME"
+            TITLE="$GITHUB_REF_NAME"
+            PRERELEASE=()
+          else
+            TAG="nightly"
+            TITLE="Vortex Browser Bridge Nightly"
+            PRERELEASE=(--prerelease)
+          fi
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --target main --generate-notes "${PRERELEASE[@]}"
+          fi
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" \
+            release-assets/chrome/vortex-browser-bridge-chrome.crx \
+            release-assets/firefox/vortex-browser-bridge-firefox.xpi \
+            release-assets/firefox-android/vortex-browser-bridge-firefox-android.xpi \
+            --clobber
