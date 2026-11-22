@@ -102,7 +102,7 @@ jobs:
           path: VortexDM
       - run: diff -u VortexDM/docs/IPC_PROTOCOL.md browser-bridge/docs/IPC_PROTOCOL.md
   publish-release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'
     needs: [verify, protocol-sync]
     runs-on: ubuntu-latest
     permissions:
@@ -126,6 +126,11 @@ jobs:
       - name: Publish individual extension files
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'nightly' }}
+          name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'Vortex Browser Bridge Nightly' }}
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+          make_latest: false
+          target_commitish: main
           files: |
             release-assets/*.crx
             release-assets/*.xpi
