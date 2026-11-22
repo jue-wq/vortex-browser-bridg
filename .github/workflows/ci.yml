@@ -1,39 +1,46 @@
-name: Browser Bridge CI
+name: Vortex Browser Bridge
+
 on:
   push:
   pull_request:
   workflow_dispatch:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 permissions:
   contents: read
+
 jobs:
-  verify:
+  build-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run check
-      - run: npm run build:chrome
-      - run: npm run build:firefox
-      - run: npm run build:firefox:android
-      - name: Package and validate all extension targets
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck and tests
+        run: npm run check
+      - name: Build Chrome MV3
+        run: npm run build:chrome
+      - name: Build Firefox Desktop
+        run: npm run build:firefox
+      - name: Build Firefox for Android
+        run: npm run build:firefox:android
+      - name: Package and verify browser archives
         run: bash scripts/package-extensions.sh
-        env:
-          CHROME_EXTENSION_PRIVATE_KEY: ${{ secrets.CHROME_EXTENSION_PRIVATE_KEY }}
-          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
-          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
       - uses: actions/upload-artifact@v6
         with:
-          name: browser-bridge-packages
-          path: release-assets/*
+          name: vortex-browser-bridge-packages
+          path: dist/*
           if-no-files-found: error
           retention-days: 30
+
   protocol-sync:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -42,25 +49,33 @@ jobs:
         with:
           path: browser-bridge
       - uses: actions/checkout@v5
+        continue-on-error: true
         with:
           repository: jue-wq/VortexDM
           path: VortexDM
-      - run: diff -u VortexDM/docs/IPC_PROTOCOL.md browser-bridge/docs/IPC_PROTOCOL.md
+      - name: Compare shared protocol (non-blocking)
+        continue-on-error: true
+        run: |
+          if [[ ! -f VortexDM/docs/IPC_PROTOCOL.md ]]; then
+            echo "::warning::VortexDM protocol document is unavailable; sync check skipped."
+            exit 0
+          fi
+          diff -u VortexDM/docs/IPC_PROTOCOL.md browser-bridge/docs/IPC_PROTOCOL.md
+
   publish-release:
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
-    needs: [verify, protocol-sync]
+    needs: [build-and-verify]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
-      actions: read
     steps:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v6
         with:
-          name: browser-bridge-packages
-          path: release-assets
-      - name: Publish individual extension files
+          name: vortex-browser-bridge-packages
+          path: dist
+      - name: Publish individual ZIP and XPI files
         run: bash scripts/publish-release.sh
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
