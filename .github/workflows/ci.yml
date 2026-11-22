@@ -137,13 +137,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          mkdir -p release-assets/chrome release-assets/firefox release-assets/firefox-android
-          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name vortex-browser-bridge-chrome-crx --dir release-assets/chrome
-          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name vortex-browser-bridge-firefox-xpi --dir release-assets/firefox
-          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name vortex-browser-bridge-firefox-android-xpi --dir release-assets/firefox-android
+          mkdir -p release-assets/chrome downloaded
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --dir downloaded
+          CRX="$(find downloaded -type f -name '*.crx' -print -quit)"
+          [ -n "$CRX" ] && cp "$CRX" release-assets/chrome/vortex-browser-bridge-chrome.crx
+          for package in vortex-browser-bridge-firefox.xpi vortex-browser-bridge-firefox-unsigned.zip vortex-browser-bridge-firefox-android.xpi vortex-browser-bridge-firefox-android-unsigned.zip; do
+            source="$(find downloaded -type f -name "$package" -print -quit)"
+            [ -z "$source" ] || cp "$source" "release-assets/$package"
+          done
           test -s release-assets/chrome/vortex-browser-bridge-chrome.crx
-          test -s release-assets/firefox/vortex-browser-bridge-firefox.xpi
-          test -s release-assets/firefox-android/vortex-browser-bridge-firefox-android.xpi
       - name: Publish individual extension files
         env:
           GH_TOKEN: ${{ github.token }}
@@ -166,4 +168,10 @@ jobs:
           [ ! -f release-assets/vortex-browser-bridge-firefox-unsigned.zip ] || ASSETS+=(release-assets/vortex-browser-bridge-firefox-unsigned.zip)
           [ ! -f release-assets/vortex-browser-bridge-firefox-android.xpi ] || ASSETS+=(release-assets/vortex-browser-bridge-firefox-android.xpi)
           [ ! -f release-assets/vortex-browser-bridge-firefox-android-unsigned.zip ] || ASSETS+=(release-assets/vortex-browser-bridge-firefox-android-unsigned.zip)
+          if [ ! -f release-assets/vortex-browser-bridge-firefox.xpi ]; then
+            gh release delete-asset "$TAG" vortex-browser-bridge-firefox.xpi --repo "$GITHUB_REPOSITORY" --yes || true
+          fi
+          if [ ! -f release-assets/vortex-browser-bridge-firefox-android.xpi ]; then
+            gh release delete-asset "$TAG" vortex-browser-bridge-firefox-android.xpi --repo "$GITHUB_REPOSITORY" --yes || true
+          fi
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" "${ASSETS[@]}" --clobber
