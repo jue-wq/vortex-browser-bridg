@@ -24,7 +24,7 @@ export default defineConfig({
         "vortex-extract-page": { suggested_key: { default: "Ctrl+Shift+E" }, description: "Extract the current page with yt-dlp" }
       },
       browser_specific_settings: {
-        gecko: { id: "vortex-browser-bridge@vortexdm.local", strict_min_version: "121.0" }
+        gecko: { id: "vortex-browser-bridge@vortexdm.local", strict_min_version: "121.0", data_collection_permissions: { required: ["websiteActivity"] } }
       }
     };
   }
