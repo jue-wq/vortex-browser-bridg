@@ -36,5 +36,5 @@ if [[ ! -f release-assets/vortex-browser-bridge-firefox-android.xpi ]]; then
     --repo "$GITHUB_REPOSITORY" --yes || true
 fi
 
-(("${#assets[@]}" > 0)) || { echo "No extension packages found" >&2; exit 1; }
+if (( ${#assets[@]} == 0 )); then echo "No extension packages found" >&2; exit 1; fi
 gh release upload "$tag" --repo "$GITHUB_REPOSITORY" "${assets[@]}" --clobber
